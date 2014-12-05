@@ -59,17 +59,86 @@ package
         
         private var j:int = 0;
         
+        private var k_normalized_vectors:int = 0;
+        private var residualVector:Point = new Point(0, 0);
+        
+        private var speedParam:Number = 1;
+        private var speedVector:Point;
+        private var speedVector1:Point;
+        
         private function onUpdate(e:Event):void 
         {
-            _ball.x = splinePts[j].x;
-            _ball.y = splinePts[j].y;
-            
-            if ((j + 1) > (splinePts.length - 1))
+            if (j != 0)
             {
-                j = -1;
+                speedVector = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
+                speedVector1 = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
+                residualVector = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
+                
+                if (speedVector.length > speedParam)
+                {
+                    if (k_normalized_vectors == 0)
+                    {
+                        k_normalized_vectors = speedVector.length / speedParam;
+                        
+                        for (var i:int = 0; i < k_normalized_vectors; i ++)
+                        {
+                            speedVector1.normalize(speedParam);
+                            residualVector = residualVector.subtract(speedVector1);
+                        }
+                        
+                        trace(residualVector);
+                        
+                        k_normalized_vectors ++;
+                    }
+                    
+                    speedVector.normalize(speedParam);
+                }
+                
+            }else {
+                    
+                speedVector = new Point(0, 0);
+                _ball.x = pathPts[0].x;
+                _ball.y = pathPts[0].y;
+                
+                k_normalized_vectors = 0;
+                residualVector = new Point(0, 0);
+                j = 1;
+                return;
+                
             }
             
-            j++;
+            if (k_normalized_vectors == 1)
+            {
+                 _ball.x += residualVector.x;
+                 _ball.y += residualVector.y;   
+                 
+                
+            }else
+            {
+                _ball.x += speedVector.x;
+                _ball.y += speedVector.y;
+            }
+            
+            if (k_normalized_vectors != 0)
+            {
+                k_normalized_vectors --;
+            }
+            //trace("coord    " + _ball.x + " _ " + _ball.y);
+            
+            if (k_normalized_vectors == 0)
+            {
+                if ((j + 1) > (splinePts.length - 1))
+                {
+                    j = -1;
+                }
+            
+                j++;
+            }else if (j == 0) {
+                
+                    j++;
+            }
+            
+            //trace(k_normalized_vectors);
         }
         
         private function drawSplinePath():void
@@ -92,7 +161,7 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 1;
+                var delta:Number = 3;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
