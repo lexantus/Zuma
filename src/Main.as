@@ -17,11 +17,12 @@ package
 	{
         private var _ball:Ball;
         
+        private var _spline:CubicSpline;
+        
         private var _path:Path2;
         private var pathPts:Vector.<Point>;
         private var splinePts:Vector.<Point>;
         
-        private var _spline:CubicSpline;
 		
 		public function Main():void 
 		{
@@ -43,105 +44,21 @@ package
             _spline = new CubicSpline;
     
             addChild(_path);
-            drawSplinePath();
-            addBall();
+            DrawSplinePath();
+            AddBall();
         }
         
-        private function addBall():void
+        private function AddBall():void
         {
             _ball = new Ball;
             _ball.x = pathPts[0].x;
             _ball.y = pathPts[0].y;
             _path.addChild(_ball);
             
-            addEventListener(Event.ENTER_FRAME, onUpdate);
+            addEventListener(Event.ENTER_FRAME, OnUpdate);
         }
         
-        private var j:int = 0;
-        
-        private var k_normalized_vectors:int = 0;
-        private var residualVector:Point = new Point(0, 0);
-        
-        private var speedParam:Number = 1;
-        private var speedVector:Point;
-        private var speedVector1:Point;
-        
-        private function onUpdate(e:Event):void 
-        {
-            if (j != 0)
-            {
-                speedVector = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
-                speedVector1 = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
-                residualVector = new Point(splinePts[j].x - splinePts[j - 1].x, splinePts[j].y - splinePts[j -1].y);
-                
-                if (speedVector.length > speedParam)
-                {
-                    if (k_normalized_vectors == 0)
-                    {
-                        k_normalized_vectors = speedVector.length / speedParam;
-                        
-                        for (var i:int = 0; i < k_normalized_vectors; i ++)
-                        {
-                            speedVector1.normalize(speedParam);
-                            residualVector = residualVector.subtract(speedVector1);
-                        }
-                        
-                        trace(residualVector);
-                        
-                        k_normalized_vectors ++;
-                    }
-                    
-                    speedVector.normalize(speedParam);
-                }
-                
-            }else {
-                    
-                speedVector = new Point(0, 0);
-                _ball.x = pathPts[0].x;
-                _ball.y = pathPts[0].y;
-                
-                k_normalized_vectors = 0;
-                residualVector = new Point(0, 0);
-                j = 1;
-                return;
-                
-            }
-            
-            if (k_normalized_vectors == 1)
-            {
-                 _ball.x += residualVector.x;
-                 _ball.y += residualVector.y;   
-                 
-                
-            }else
-            {
-                _ball.x += speedVector.x;
-                _ball.y += speedVector.y;
-            }
-            
-            if (k_normalized_vectors != 0)
-            {
-                k_normalized_vectors --;
-            }
-            //trace("coord    " + _ball.x + " _ " + _ball.y);
-            
-            if (k_normalized_vectors == 0)
-            {
-                if ((j + 1) > (splinePts.length - 1))
-                {
-                    j = -1;
-                }
-            
-                j++;
-            }else if (j == 0) {
-                
-                    j++;
-            }
-            
-            //trace(k_normalized_vectors);
-        }
-        
-        private function drawSplinePath():void
+        private function DrawSplinePath():void
         {
                 trace("drawSplinePath");
                 var i:Number = 1;
@@ -180,19 +97,117 @@ package
                 while (x_ToFindY < pathPts[pathPts.length - 1].x)
                 {
                         smoothY = _spline.F(x_ToFindY);
-                        trace(x_ToFindY + " and " + smoothY);
-                        drawPoint(new Point(x_ToFindY, smoothY));
+                        DrawPoint(new Point(x_ToFindY, smoothY));
                         x_ToFindY += delta;
                 }
+                
+                SubdividePath(splinePts);
         }
         
-        private function drawPoint(_pt:Point):void
+        private function DrawPoint(_pt:Point):void
         {
             _path.graphics.beginFill(0x00ff00, 1);
             _path.graphics.drawCircle(_pt.x, _pt.y, 3);
             _path.graphics.endFill();
             
             splinePts.push(_pt);
+        }
+        
+        private function OnUpdate(e:Event):void
+        {
+            
+        }
+        
+        private function SubdividePath(path:Vector.<Point>):Vector.<Point>
+        {
+            var subdividedPath:Vector.<Point> = new Vector.<Point>;
+            
+            var i:int;
+            var pt:Point;
+            var priv_pt:Point;
+            var resultVector:Point;
+            var resultVectors:Vector.<Point> = new Vector.<Point>;
+            var resultNormalizedVectors:Vector.<Point> = new Vector.<Point>;
+            var stepVectorLength:Number;
+            var resultVectorsLen:Vector.<Number> = new Vector.<Number>
+            
+            for (i = 1; i < path.length; i++)
+            {
+                priv_pt = path[i - 1];
+                pt = path[i];
+                resultVector =  pt.subtract(priv_pt);
+                resultVectors.push(resultVector);
+                resultNormalizedVectors.push(resultVector); // потом нормализуем, а сейчас просто копируем
+                resultVectorsLen.push(resultVector.length);
+            }
+            
+            stepVectorLength = resultVectorsLen[0];
+            
+            // find min segment length
+            for (i = 0; i < resultVectorsLen.length; i++)
+            {
+                    if (stepVectorLength > resultVectorsLen[i])
+                    {
+                            stepVectorLength = resultVectorsLen[i];
+                    }
+            }
+            
+            for (i = 0; i < path.length - 1; i++)
+            {
+                    resultNormalizedVectors[i].normalize(stepVectorLength); 
+            }
+            
+            var normalizedVectorLength:Number = resultNormalizedVectors[0].length;
+            var numNormVectorsInSegment:int;
+            
+            var residualVector:Point;
+            var residualVectorLen:Number;
+            
+            var multipliedVector:Point;
+            
+            var j:int;
+            
+            for (i = 0; i < path.length - 1; i++)
+            {
+                    trace(i + "++++++++++++++++++++++++++++++++++");
+                    if (i == 0)
+                    {
+                        numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength; 
+                        
+                        multipliedVector = new Point(0, 0);
+                        
+                        for (j = 0; j < numNormVectorsInSegment; j++)
+                        {
+                            multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
+                            
+                        }
+                        
+                        residualVector = resultVectors[i].subtract(multipliedVector);
+                    }
+                    else
+                    {
+                        numNormVectorsInSegment = (resultVectorsLen[i] - residualVectorLen) / normalizedVectorLength;
+                        
+                        multipliedVector = new Point(0, 0);
+                        
+                        for (j = 0; j < numNormVectorsInSegment; j++)
+                        {
+                            multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
+                        }
+                        
+                        residualVector = resultVectors[i].subtract(multipliedVector).subtract(residualVector);                      
+                    }
+                    
+                    residualVectorLen = residualVector.length;
+                    trace(resultVectorsLen[i]);
+                    trace(normalizedVectorLength);
+                    trace(numNormVectorsInSegment);
+                    trace(residualVector);
+                    trace(residualVectorLen);
+            }
+            
+            
+            return null;
         }
 	}
 	
