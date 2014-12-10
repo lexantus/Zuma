@@ -41,7 +41,7 @@ package
         
         private function StartGame(): void
         {
-            _path = new Path2();
+            _path = new Path3();
             _spline = new CubicSpline;
     
             addChild(_path);
@@ -79,7 +79,7 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 5;
+                var delta:Number = 100;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
@@ -238,14 +238,13 @@ package
                     }
                     
                     residualVectorLen = residualVector.length;
-                    trace("resultVector[" + i + "] = " + resultVectors[i]);
-                    trace("resultNormalizedVectors[" + i + "] = " + resultNormalizedVectors[i]);
-                    trace("resultVectorsLen[" + i + "] = " + resultVectorsLen[i]);
-                    trace("normalizedVectorLength = " + normalizedVectorLength);
-                    trace("numNormVectorsInSegment = " + numNormVectorsInSegment);
-                    trace("residualVector = " + residualVector);
-                    trace("residualVectorLen = " + residualVectorLen);
-                    
+                    //trace("resultVector[" + i + "] = " + resultVectors[i]);
+                    //trace("resultNormalizedVectors[" + i + "] = " + resultNormalizedVectors[i]);
+                    //trace("resultVectorsLen[" + i + "] = " + resultVectorsLen[i]);
+                    //trace("normalizedVectorLength = " + normalizedVectorLength);
+                    //trace("numNormVectorsInSegment = " + numNormVectorsInSegment);
+                    //trace("residualVector = " + residualVector);
+                    //trace("residualVectorLen = " + residualVectorLen);
 
                     for (j = 0; j < numNormVectorsInSegment; j++)
                     {
