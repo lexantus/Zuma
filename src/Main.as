@@ -7,7 +7,7 @@ package
     import spline.CubicSpline;
     
     import assets.Ball;
-    import assets.Path2;
+    import assets.*;
 	
 	/**
 	 * ...
@@ -19,10 +19,11 @@ package
         
         private var _spline:CubicSpline;
         
-        private var _path:Path2;
+        private var _path:MovieClip;
         private var pathPts:Vector.<Point>;
         private var splinePts:Vector.<Point>;
         
+        private var segmentsUniformMovement:Vector.<Segment>;
 		
 		public function Main():void 
 		{
@@ -78,7 +79,7 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 3;
+                var delta:Number = 5;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
@@ -101,7 +102,7 @@ package
                         x_ToFindY += delta;
                 }
                 
-                SubdividePath(splinePts);
+                segmentsUniformMovement = SubdividePath(splinePts);
         }
         
         private function DrawPoint(_pt:Point):void
@@ -113,14 +114,52 @@ package
             splinePts.push(_pt);
         }
         
+        private var currentSegmentIndex:int = 0;
+        
         private function OnUpdate(e:Event):void
         {
-            
+            if (segmentsUniformMovement)
+            {
+                if (currentSegmentIndex == segmentsUniformMovement.length) 
+                {
+                    trace("num segments = " + currentSegmentIndex);
+                    currentSegmentIndex = 0;
+                    _ball.x = pathPts[0].x;
+                    _ball.y = pathPts[0].y;
+                }
+                
+                if (!segmentsUniformMovement[currentSegmentIndex].isResidual)
+                {
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    currentSegmentIndex ++;
+                
+                }else {
+                    
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    
+                    if ((currentSegmentIndex + 1) == segmentsUniformMovement.length)
+                    {
+                       currentSegmentIndex = 0;
+                       _ball.x = pathPts[0].x;
+                       _ball.y = pathPts[0].y;
+                       
+                    }else
+                    {
+                        currentSegmentIndex ++;
+                    }
+                    
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    currentSegmentIndex ++;
+                }
+            }
         }
         
-        private function SubdividePath(path:Vector.<Point>):Vector.<Point>
+        private function SubdividePath(path:Vector.<Point>):Vector.<Segment>
         {
-            var subdividedPath:Vector.<Point> = new Vector.<Point>;
+            var subdividedPath:Vector.<Segment> = new Vector.<Segment>;
             
             var i:int;
             var pt:Point;
@@ -137,7 +176,7 @@ package
                 pt = path[i];
                 resultVector =  pt.subtract(priv_pt);
                 resultVectors.push(resultVector);
-                resultNormalizedVectors.push(resultVector); // потом нормализуем, а сейчас просто копируем
+                resultNormalizedVectors.push(resultVector.clone()); // потом нормализуем, а сейчас просто копируем
                 resultVectorsLen.push(resultVector.length);
             }
             
@@ -154,7 +193,7 @@ package
             
             for (i = 0; i < path.length - 1; i++)
             {
-                    resultNormalizedVectors[i].normalize(stepVectorLength); 
+                    resultNormalizedVectors[i].normalize(1); 
             }
             
             var normalizedVectorLength:Number = resultNormalizedVectors[0].length;
@@ -199,15 +238,33 @@ package
                     }
                     
                     residualVectorLen = residualVector.length;
-                    trace(resultVectorsLen[i]);
-                    trace(normalizedVectorLength);
-                    trace(numNormVectorsInSegment);
-                    trace(residualVector);
-                    trace(residualVectorLen);
+                    trace("resultVector[" + i + "] = " + resultVectors[i]);
+                    trace("resultNormalizedVectors[" + i + "] = " + resultNormalizedVectors[i]);
+                    trace("resultVectorsLen[" + i + "] = " + resultVectorsLen[i]);
+                    trace("normalizedVectorLength = " + normalizedVectorLength);
+                    trace("numNormVectorsInSegment = " + numNormVectorsInSegment);
+                    trace("residualVector = " + residualVector);
+                    trace("residualVectorLen = " + residualVectorLen);
+                    
+
+                    for (j = 0; j < numNormVectorsInSegment; j++)
+                    {
+                        var segment:Segment = new Segment;
+                           
+                            segment.speedVector = resultNormalizedVectors[i];
+                            segment.isResidual = false;
+                            subdividedPath.push(segment);
+                    }
+                    
+                    var residualSegment:Segment = new Segment;
+                        residualSegment.speedVector = residualVector;
+                        residualSegment.isResidual = true;
+                        subdividedPath.push(residualSegment);
+                        
             }
             
             
-            return null;
+            return subdividedPath;
         }
 	}
 	

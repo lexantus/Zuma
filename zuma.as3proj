@@ -5,7 +5,7 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="bin\zuma.swf" />
-    <movie fps="30" />
+    <movie fps="24" />
     <movie width="500" />
     <movie height="500" />
     <movie version="10" />
