@@ -35,7 +35,6 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-            trace("entry point");
             StartGame();
 		}
         
@@ -61,7 +60,6 @@ package
         
         private function DrawSplinePath():void
         {
-                trace("drawSplinePath");
                 var i:Number = 1;
                 
                 pathPts = new Vector.<Point>;
