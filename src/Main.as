@@ -41,7 +41,7 @@ package
         
         private function StartGame(): void
         {
-            _path = new Path3();
+            _path = new Path2();
             _spline = new CubicSpline;
     
             addChild(_path);
@@ -79,7 +79,7 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 100;
+                var delta:Number = 8;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
@@ -92,8 +92,10 @@ package
                 
                 _spline.BuildSpline(tempX, tempY, tempX.length);
                
+                // left limit
+                DrawPoint(pathPts[0]);
+                
                 var x_ToFindY:Number = pathPts[0].x + delta;
-                var n:Number = pathPts.length;
                             
                 while (x_ToFindY < pathPts[pathPts.length - 1].x)
                 {
@@ -101,6 +103,10 @@ package
                         DrawPoint(new Point(x_ToFindY, smoothY));
                         x_ToFindY += delta;
                 }
+                
+                // right limit
+                DrawPoint(pathPts[pathPts.length - 1]);
+                
                 
                 segmentsUniformMovement = SubdividePath(splinePts);
         }
@@ -208,7 +214,6 @@ package
             
             for (i = 0; i < path.length - 1; i++)
             {
-                    trace(i + "++++++++++++++++++++++++++++++++++");
                     if (i == 0)
                     {
                         numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength; 
