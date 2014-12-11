@@ -77,7 +77,7 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 8;
+                var delta:Number = 20;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
@@ -179,6 +179,8 @@ package
                 priv_pt = path[i - 1];
                 pt = path[i];
                 resultVector =  pt.subtract(priv_pt);
+                //resultVector.x = Math.ceil(resultVector.x);
+                //resultVector.y = Math.ceil(resultVector.y);
                 resultVectors.push(resultVector);
                 resultNormalizedVectors.push(resultVector.clone()); // потом нормализуем, а сейчас просто копируем
                 resultVectorsLen.push(resultVector.length);
@@ -197,7 +199,7 @@ package
             
             for (i = 0; i < path.length - 1; i++)
             {
-                    resultNormalizedVectors[i].normalize(1); 
+                    resultNormalizedVectors[i].normalize(7); 
             }
             
             var normalizedVectorLength:Number = resultNormalizedVectors[0].length;
@@ -212,6 +214,7 @@ package
             
             for (i = 0; i < path.length - 1; i++)
             {
+                    trace(i + "===================================================");
                     if (i == 0)
                     {
                         numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength; 
@@ -228,7 +231,8 @@ package
                     }
                     else
                     {
-                        numNormVectorsInSegment = (resultVectorsLen[i] - residualVectorLen) / normalizedVectorLength;
+                        //numNormVectorsInSegment = (resultVectorsLen[i] - residualVectorLen) / normalizedVectorLength;
+                        numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength;
                         
                         multipliedVector = new Point(0, 0);
                         
@@ -237,17 +241,18 @@ package
                             multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
                         }
                         
-                        residualVector = resultVectors[i].subtract(multipliedVector).subtract(residualVector);                      
+                        //residualVector = resultVectors[i].subtract(multipliedVector).subtract(residualVector);
+                        residualVector = resultVectors[i].subtract(multipliedVector);
                     }
                     
                     residualVectorLen = residualVector.length;
-                    //trace("resultVector[" + i + "] = " + resultVectors[i]);
-                    //trace("resultNormalizedVectors[" + i + "] = " + resultNormalizedVectors[i]);
-                    //trace("resultVectorsLen[" + i + "] = " + resultVectorsLen[i]);
-                    //trace("normalizedVectorLength = " + normalizedVectorLength);
-                    //trace("numNormVectorsInSegment = " + numNormVectorsInSegment);
-                    //trace("residualVector = " + residualVector);
-                    //trace("residualVectorLen = " + residualVectorLen);
+                    trace("resultVector[" + i + "] = " + resultVectors[i]);
+                    trace("resultNormalizedVectors[" + i + "] = " + resultNormalizedVectors[i]);
+                    trace("resultVectorsLen[" + i + "] = " + resultVectorsLen[i]);
+                    trace("normalizedVectorLength = " + normalizedVectorLength);
+                    trace("numNormVectorsInSegment = " + numNormVectorsInSegment);
+                    trace("residualVector = " + residualVector);
+                    trace("residualVectorLen = " + residualVectorLen);
 
                     for (j = 0; j < numNormVectorsInSegment; j++)
                     {
