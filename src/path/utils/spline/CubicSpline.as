@@ -1,9 +1,10 @@
-import spline.SplineTuple;
-package spline {
+package path.utils.spline
+{
 	/**
      * ...
      * @author Rozhin Alexey
      */
+    import path.utils.spline.SplineTuple;
      
     public class CubicSpline 
     {

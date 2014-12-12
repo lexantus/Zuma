@@ -1,5 +1,4 @@
-package  
-{
+package path.model {
     import flash.geom.Point;
 	/**
      * ...

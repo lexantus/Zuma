@@ -1,19 +1,22 @@
 package 
 {
+    /**
+     * ...
+     * @author Rozhin Alexey
+     */
+    
+    import chain.controller.BallChainController;
+    import path.model.Segment;
+    import path.utils.spline.*;
     import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
     import flash.geom.Point;
-    import spline.CubicSpline;
     
     import assets.Ball;
     import assets.*;
 	
-	/**
-	 * ...
-	 * @author Rozhin Alexey
-	 */
-	public class Main extends Sprite 
+	public class Zuma extends Sprite 
 	{
         private var _ball:Ball;
         
@@ -24,8 +27,11 @@ package
         private var splinePts:Vector.<Point>;
         
         private var segmentsUniformMovement:Vector.<Segment>;
+        private var delta:Number = 20;
+        private var SPEED:Number = 4;
+        private var missUpdate:int = 2;
 		
-		public function Main():void 
+		public function Zuma():void 
 		{
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -35,7 +41,8 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-            StartGame();
+            //StartGame();
+            new BallChainController();
 		}
         
         private function StartGame(): void
@@ -77,7 +84,6 @@ package
                 var smoothX:Number;
                 var smoothY:Number;
                 
-                var delta:Number = 20;
                 
                 var tempX:Vector.<Number> = new Vector.<Number>;
                 var tempY:Vector.<Number> = new Vector.<Number>;
@@ -119,9 +125,20 @@ package
         }
         
         private var currentSegmentIndex:int = 0;
+        private var missUpdateCount:int = 0;
         
         private function OnUpdate(e:Event):void
         {
+            missUpdateCount ++;
+            
+            if (missUpdateCount < missUpdate)
+            {
+                    return;
+            }else 
+            {
+                missUpdateCount = 0;
+            }
+            
             if (segmentsUniformMovement)
             {
                 if (currentSegmentIndex == segmentsUniformMovement.length) 
@@ -199,7 +216,7 @@ package
             
             for (i = 0; i < path.length - 1; i++)
             {
-                    resultNormalizedVectors[i].normalize(7); 
+                    resultNormalizedVectors[i].normalize(SPEED); 
             }
             
             var normalizedVectorLength:Number = resultNormalizedVectors[0].length;

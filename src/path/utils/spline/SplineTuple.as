@@ -1,4 +1,5 @@
-package spline {
+package path.utils.spline 
+{
 	/**
      * ...
      * @author Rozhin Alexey
