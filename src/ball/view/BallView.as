@@ -1,16 +1,13 @@
 package ball.view {
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	/**
      * ...
      * @author Rozhin Alexey
      */
-    public class BallView 
+    public class BallView extends Sprite
     {
-        
-        public function BallView() 
-        {
-            
-        }
-        
+			public var view:MovieClip;
     }
 
 }

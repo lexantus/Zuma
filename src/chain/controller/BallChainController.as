@@ -11,17 +11,20 @@ package chain.controller
      
     public class BallChainController
     {
-        private var _model:BallChainModel;
+        private var _model:BallChainModel = new BallChainModel();
         
         public function BallChainController() 
         {
-            for (var j:int = 0; j < 12; j++)
-            {
-                GenerateBall();
-            }
             
-            trace(_model.chain);
         }
+		
+		public function GenerateStartChain():void
+		{
+			for (var j:int = 0; j < 12; j++)
+			{
+				GenerateBall();
+			}
+		}
         
         public function GenerateBall():void
         {

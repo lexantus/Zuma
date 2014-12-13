@@ -5,6 +5,7 @@ package
      * @author Rozhin Alexey
      */
     
+	import ball.view.ordinary.RedBallView;
     import chain.controller.BallChainController;
     import path.model.Segment;
     import path.utils.spline.*;
@@ -43,6 +44,7 @@ package
 			// entry point
             //StartGame();
             new BallChainController();
+			addChild(new RedBallView());
 		}
         
         private function StartGame(): void

@@ -6,9 +6,9 @@ package chain.model
      */
     import ball.model.colors.interfaces.IBallColor;
     import ball.model.colors.*;
-    import chain.model.interfaces.IBallChainModel;
     import bonus.interfaces.IBallBonus;
     import bonus.*;
+	import chain.model.interfaces.IBallChainModel;
     
     import ball.model.BallDescription;
     
@@ -41,7 +41,7 @@ package chain.model
                 
                 if (chain.length >= 2)
                 {
-                    if (chain[chain.length - 2].color == _model.chain[chain.length - 1].color)
+                    if (chain[chain.length - 2].color == chain[chain.length - 1].color)
                     {
                             while (COLORS[rndIndex] == chain[chain.length - 1].color)
                             {
@@ -64,12 +64,14 @@ package chain.model
                 
                 if (rndBonusIndex != -1)
                 {
-                    ballDesc.bonus = BONUS[rndBonusTypeIndex];
+                    ballDesc.bonus = BONUS[rndBonusIndex];
                     
                 }else
                 {
                     ballDesc.bonus = null;
                 }
+				
+				chain.push(ballDesc);
                 
                 return ballDesc;
         } 

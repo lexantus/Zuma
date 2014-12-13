@@ -1,14 +1,20 @@
-package ball.view.ordinary {
+package ball.view.ordinary 
+{
 	/**
      * ...
      * @author Rozhin Alexey
      */
-    public class PurpleBallView 
+	import ball.view.BallView;
+	import fla_assets.PinkBallView;
+	 
+	 
+    public class PurpleBallView extends BallView
     {
         
         public function PurpleBallView() 
         {
-            
+				view = fla_assets.PinkBallView();
+				addChild(view);
         }
         
     }
