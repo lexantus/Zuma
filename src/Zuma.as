@@ -7,6 +7,7 @@ package
     
 	import ball.view.ordinary.RedBallView;
     import chain.controller.BallChainController;
+    import fla_assets.Background;
     import path.model.Segment;
     import path.utils.spline.*;
     import flash.display.MovieClip;
@@ -31,6 +32,8 @@ package
         private var delta:Number = 20;
         private var SPEED:Number = 4;
         private var missUpdate:int = 2;
+        
+        private var _bg:MovieClip;
 		
 		public function Zuma():void 
 		{
@@ -43,6 +46,11 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
             //StartGame();
+            _bg = new Background();
+            _bg.x = 293.9;
+            _bg.y = 247;
+            addChild(_bg);
+            
             var ballChainController:BallChainController = new BallChainController(this);
             ballChainController.GenerateStartChain();
 		}

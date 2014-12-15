@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="bin\zuma.swf" />
     <movie fps="24" />
-    <movie width="500" />
-    <movie height="500" />
+    <movie width="774" />
+    <movie height="495" />
     <movie version="10" />
     <movie minorVersion="1" />
     <movie platform="Flash Player" />
