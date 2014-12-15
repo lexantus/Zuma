@@ -5,15 +5,18 @@ package
      * @author Rozhin Alexey
      */
     
+     import fla_assets.Background;
 	import ball.view.ordinary.RedBallView;
     import chain.controller.BallChainController;
-    import fla_assets.Background;
     import path.model.Segment;
     import path.utils.spline.*;
     import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
     import flash.geom.Point;
+    
+    import path.view.PathView;
+    import path.view.PathView1;
     
     import assets.Ball;
     import assets.*;
@@ -34,6 +37,7 @@ package
         private var missUpdate:int = 2;
         
         private var _bg:MovieClip;
+        private var _pathView:PathView;
 		
 		public function Zuma():void 
 		{
@@ -50,6 +54,9 @@ package
             _bg.x = 293.9;
             _bg.y = 247;
             addChild(_bg);
+            
+            _pathView = new PathView1();
+            addChild(_pathView);
             
             var ballChainController:BallChainController = new BallChainController(this);
             ballChainController.GenerateStartChain();
