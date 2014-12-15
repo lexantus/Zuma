@@ -4,6 +4,8 @@ package chain.controller
      * ...
      * @author Rozhin Alexey
      */
+    import ball.utils.BallUtils;
+    import flash.display.MovieClip;
     import flash.display.Sprite;
     import fla_assets.*;
     
@@ -60,41 +62,38 @@ package chain.controller
                 
             }else if (_bonus == null)
             {
-                _view.addBall(BallViewOrdinaryFactory(_color));     
+                _view.addBall(BallUtils.GetBallViewClass(_color));     
             }
-            
         }
         
-        private function BallViewOrdinaryFactory(ballColor:IBallColor):Class
+        public function GetRandomBallColorFromChain(numElementsNeedToGet:int = 2):Vector.<IBallColor>
         {
-             if (ballColor is BlueBallColor)
-             {
-                 return BlueBallView;
-                 
-             }else if (ballColor is BrownBallColor)
-             {
-                 return BrownBallView;
-                 
-             }else if (ballColor is GreenBallColor)
-             {
-                 return GreenBallView;
-                 
-             }else if (ballColor is PurpleBallColor)
-             {
-                 return PinkBallView;
-                 
-             }else if (ballColor is RedBallColor)
-             {
-                 return RedBallView;
-                 
-             }else if (ballColor is YellowBallColor)
-             {
-                 return YellowBallView;
-             }else
-             {
-                 throw new Error("ZumaError: There is no view class for ballColor" + ballColor);
-                 return undefined;
-             }
+            var ballColors:Vector.<IBallColor> = new Vector.<IBallColor>;
+            
+            var rnd:Number = -1;
+            var rndIndex:int = -1;
+            var privIndex:int = -1;
+            
+            for (var i:int = 0; i < numElementsNeedToGet; i++)
+            {
+                rnd = Math.random() * (_model.chain.length - 1);
+                rndIndex = Math.round(rnd);
+                
+                if (i > 0)
+                {
+                        while (rndIndex == privIndex)
+                        {
+                             rnd = Math.random() * (_model.chain.length - 1);
+                             rndIndex = Math.round(rnd);
+                        }
+                }
+                    
+                privIndex = rndIndex;
+                ballColors.push(_model.chain[rndIndex].color);
+            }
+            
+            
+            return ballColors;
         }
         
     }

@@ -15,6 +15,7 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
     import flash.geom.Point;
+    import projectiles.controller.ProjectilesController;
     
     import path.view.PathView;
     import path.view.PathView1;
@@ -41,6 +42,7 @@ package
         private var _pathView:PathView;
         private var _ballChainController:BallChainController;
         private var _gunController:GunController;
+        private var _projectilesController:ProjectilesController;
 		
 		public function Zuma():void 
 		{
@@ -64,7 +66,9 @@ package
             _ballChainController = new BallChainController(this);
             _ballChainController.GenerateStartChain();
             
-            _gunController = new GunController(this);
+            _projectilesController = new ProjectilesController(_ballChainController);
+            
+            _gunController = new GunController(this, _projectilesController);
 		}
         
         private function StartGame(): void
