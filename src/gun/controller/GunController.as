@@ -74,14 +74,32 @@ package gun.controller
             _nextProjectile.scaleY = 0.6 / _view.nextProjectileContainerMc.scaleY;
         }
         
+        private var bForbid:Boolean = false;
+        
         private function OnClick(e:MouseEvent):void 
         {
+            if (bForbid) return;
+            
+            bForbid = true;
+            
              var startProjectilePt:Point = _currentProjectile.globalToLocal(new Point(_currentProjectile.x, _currentProjectile.y + 10));
             _currentProjectile.parent.removeChild(_currentProjectile);
-                 
+                
             _projectilesController.fire(_currentProjectile, startProjectilePt);
             
-            SetProjectiles();
+            Tweener.addTween(_nextProjectile, { x: _nextProjectile.x - 3, 
+                                                y: _nextProjectile.y - 14,
+                                           scaleX:0.38, 
+                                           scaleY:0.38, 
+                                             time:0.5,
+                                       onComplete:function():void 
+                                      {
+                                            _nextProjectile.x = _nextProjectile.x + 3;
+                                            _nextProjectile.y = _nextProjectile.y + 14;
+                                            SetProjectiles();
+                                            bForbid = false;
+                        
+                                      }});
         }
         
         private const LEFT_X_LIMIT:Number = 34;
