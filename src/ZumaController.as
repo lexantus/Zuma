@@ -36,7 +36,7 @@ package
                 
             }catch (e:Error) 
             {
-                
+                trace(e.message);
             }
             
             InitGun();

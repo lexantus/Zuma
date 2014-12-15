@@ -43,8 +43,8 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
             //StartGame();
-            new BallChainController();
-			addChild(new RedBallView());
+            var ballChainController:BallChainController = new BallChainController(this);
+            ballChainController.GenerateStartChain();
 		}
         
         private function StartGame(): void

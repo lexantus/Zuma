@@ -20,6 +20,7 @@ package chain.model
                                                                    new YellowBallColor(),
                                                                    new PurpleBallColor(),
                                                                    new BrownBallColor()];
+                                                                  
                                      
         public const BONUS:Vector.<IBallBonus> = new <IBallBonus>[new PlusOneBonus(), 
                                                                   new StopMovementBonus(),
