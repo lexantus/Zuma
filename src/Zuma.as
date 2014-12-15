@@ -8,6 +8,7 @@ package
      import fla_assets.Background;
 	import ball.view.ordinary.RedBallView;
     import chain.controller.BallChainController;
+    import gun.controller.GunController;
     import path.model.Segment;
     import path.utils.spline.*;
     import flash.display.MovieClip;
@@ -38,6 +39,8 @@ package
         
         private var _bg:MovieClip;
         private var _pathView:PathView;
+        private var _ballChainController:BallChainController;
+        private var _gunController:GunController;
 		
 		public function Zuma():void 
 		{
@@ -58,8 +61,10 @@ package
             _pathView = new PathView1();
             addChild(_pathView);
             
-            var ballChainController:BallChainController = new BallChainController(this);
-            ballChainController.GenerateStartChain();
+            _ballChainController = new BallChainController(this);
+            _ballChainController.GenerateStartChain();
+            
+            _gunController = new GunController(this);
 		}
         
         private function StartGame(): void
