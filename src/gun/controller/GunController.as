@@ -7,9 +7,11 @@ package gun.controller
      */
     import ball.model.colors.interfaces.IBallColor;
     import ball.utils.BallUtils;
+    import caurina.transitions.Tweener;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.MouseEvent;
+    import flash.geom.Point;
     import gun.model.GunModel;
     import gun.view.GunView;
     import gun.controller.interfaces.IGunController;
@@ -53,13 +55,11 @@ package gun.controller
                 
             }else
             {
-                _view.currentProjectileContainerMc.removeChild(_currentProjectile);
                 _view.nextProjectileContainerMc.removeChild(_nextProjectile);
                 
                 projectilesColors= _projectilesController.ballChainController.GetRandomBallColorFromChain(1);
                 _currentProjectile = _nextProjectile;
                 _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0]));
-                
             }
             
             _view.currentProjectileContainerMc.addChild(_currentProjectile);
@@ -76,8 +76,12 @@ package gun.controller
         
         private function OnClick(e:MouseEvent):void 
         {
-            _projectilesController.fire(_currentProjectile);
-            //SetProjectiles();
+             var startProjectilePt:Point = _currentProjectile.globalToLocal(new Point(_currentProjectile.x, _currentProjectile.y + 10));
+            _currentProjectile.parent.removeChild(_currentProjectile);
+                 
+            _projectilesController.fire(_currentProjectile, startProjectilePt);
+            
+            SetProjectiles();
         }
         
         private const LEFT_X_LIMIT:Number = 34;

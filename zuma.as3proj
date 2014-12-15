@@ -54,6 +54,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="lib\zuma.swc" />
+    <element path="lib\tweener.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

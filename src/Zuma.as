@@ -66,9 +66,11 @@ package
             _ballChainController = new BallChainController(this);
             _ballChainController.GenerateStartChain();
             
-            _projectilesController = new ProjectilesController(_ballChainController);
+            _projectilesController = new ProjectilesController(this, _ballChainController);
             
             _gunController = new GunController(this, _projectilesController);
+            
+            this.addEventListener(Event.ENTER_FRAME, OnUpdate1);
 		}
         
         private function StartGame(): void
@@ -88,7 +90,12 @@ package
             _ball.y = pathPts[0].y;
             _path.addChild(_ball);
             
-            addEventListener(Event.ENTER_FRAME, OnUpdate);
+            addEventListener(Event.ENTER_FRAME, OnUpdate1);
+        }
+        
+        private function OnUpdate1(e:Event):void 
+        {
+            _projectilesController.Update();
         }
         
         private function DrawSplinePath():void

@@ -36,6 +36,7 @@
     </source-path>
     <library-path append="true">
       <path-element>D:\Desktop\current\zuma\Zuma\lib\zuma.swc</path-element>
+      <path-element>D:\Desktop\current\zuma\Zuma\lib\tweener.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
