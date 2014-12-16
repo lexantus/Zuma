@@ -1,6 +1,7 @@
 package levels.controller 
 {
     import levels.model.ZumaLevelModel;
+    import levels.view.ZumaLevelView;
 	/**
      * ...
      * @author Rozhin Alexey
@@ -8,6 +9,7 @@ package levels.controller
     public class ZumaLevelController 
     {
         public var model:ZumaLevelModel;
+        public var view:ZumaLevelView;
     }
 
 }

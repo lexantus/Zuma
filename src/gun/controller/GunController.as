@@ -49,7 +49,7 @@ package gun.controller
             
             if (!_nextProjectile)
             {
-                projectilesColors= _projectilesController.ballChainController.GetRandomBallColorFromChain(2);
+                projectilesColors = _projectilesController.ballChainController.GetRandomBallColorFromChain(2);
                 _currentProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0]));
                 _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[1]));
                 

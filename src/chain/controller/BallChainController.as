@@ -31,9 +31,9 @@ package chain.controller
             sceneView.addChild(_view);
         }
 		
-		public function GenerateStartChain():void
+		public function GenerateStartChain(numBalls:int):void
 		{
-			for (var j:int = 0; j < 12; j++)
+			for (var j:int = 0; j < numBalls; j++)
 			{
 				GenerateBall();
 			}
@@ -68,6 +68,11 @@ package chain.controller
         
         public function GetRandomBallColorFromChain(numElementsNeedToGet:int = 2):Vector.<IBallColor>
         {
+            if (_model.chain.length < numElementsNeedToGet) 
+            {
+                return null;
+            }
+            
             var ballColors:Vector.<IBallColor> = new Vector.<IBallColor>;
             
             var rnd:Number = -1;

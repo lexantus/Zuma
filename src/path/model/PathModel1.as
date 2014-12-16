@@ -1,9 +1,12 @@
-package path.model {
-    import path.model.interfaces.IPathModel;
+package path.model
+{
 	/**
      * ...
      * @author Rozhin Alexey
      */
+    import path.model.interfaces.IPathModel;
+    
+    
     public class PathModel1 implements IPathModel
     {
         

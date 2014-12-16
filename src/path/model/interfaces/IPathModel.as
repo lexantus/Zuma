@@ -1,15 +1,11 @@
-package path.model.interfaces {
+package path.model.interfaces
+{
 	/**
      * ...
      * @author Rozhin Alexey
      */
-    public class IPathModel 
+    public interface IPathModel 
     {
-        
-        public function IPathModel() 
-        {
-            
-        }
         
     }
 

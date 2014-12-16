@@ -5,20 +5,23 @@ package
      * @author Rozhin Alexey
      */
     
-     import fla_assets.Background;
+    import flash.display.MovieClip;
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.geom.Point;
+    import levels.controller.ZumaLevelController;
+    import levels.controller.*;
+    
+    import fla_assets.Background;
 	import ball.view.ordinary.RedBallView;
     import chain.controller.BallChainController;
     import gun.controller.GunController;
     import path.model.Segment;
     import path.utils.spline.*;
-    import flash.display.MovieClip;
-	import flash.display.Sprite;
-	import flash.events.Event;
-    import flash.geom.Point;
     import projectiles.controller.ProjectilesController;
     
     import path.view.PathView;
-    import path.view.PathView1;
+    import path.view.*;
     
     import assets.Ball;
     import assets.*;
@@ -39,7 +42,8 @@ package
         private var missUpdate:int = 2;
         
         private var _bg:MovieClip;
-        private var _pathView:PathView;
+ 
+        private var _levelController:ZumaLevelController;
         private var _ballChainController:BallChainController;
         private var _gunController:GunController;
         private var _projectilesController:ProjectilesController;
@@ -60,11 +64,10 @@ package
             _bg.y = 247;
             addChild(_bg);
             
-            _pathView = new PathView1();
-            addChild(_pathView);
+            _levelController = new ZumaLevelController5(this);
             
             _ballChainController = new BallChainController(this);
-            _ballChainController.GenerateStartChain();
+            _ballChainController.GenerateStartChain(10);
             
             _projectilesController = new ProjectilesController(this, _ballChainController);
             
