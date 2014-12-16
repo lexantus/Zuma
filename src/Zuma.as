@@ -5,6 +5,7 @@ package
      * @author Rozhin Alexey
      */
     
+	import fla_assets.Path1;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
@@ -28,18 +29,11 @@ package
 	
 	public class Zuma extends Sprite 
 	{
-        private var _ball:Ball;
+        private var _ball:RedBallView;
         
-        private var _spline:CubicSpline;
+        //private var _splines:Vector.<CubicSpline>;
         
         private var _path:MovieClip;
-        private var pathPts:Vector.<Point>;
-        private var splinePts:Vector.<Point>;
-        
-        private var segmentsUniformMovement:Vector.<Segment>;
-        private var delta:Number = 20;
-        private var SPEED:Number = 4;
-        private var missUpdate:int = 2;
         
         private var _bg:MovieClip;
  
@@ -64,161 +58,127 @@ package
             _bg.y = 247;
             addChild(_bg);
             
-            _levelController = new ZumaLevelController5(this);
+            _levelController = new ZumaLevelController1(this);
             
             _ballChainController = new BallChainController(this);
-            _ballChainController.GenerateStartChain(10);
+            _ballChainController.GenerateStartChain(2);
             
             _projectilesController = new ProjectilesController(this, _ballChainController);
             
             _gunController = new GunController(this, _projectilesController);
+			
+			_path = new Path1();
+			_path.x = 343.8;
+			_path.y = 235.5;
+			
+			addChild(_path);
+			DrawSplinePath();
+			AddBall();
             
             this.addEventListener(Event.ENTER_FRAME, OnUpdate1);
 		}
         
-        private function StartGame(): void
-        {
-            _path = new Path2();
-            _spline = new CubicSpline;
-    
-            addChild(_path);
-            DrawSplinePath();
-            AddBall();
-        }
-        
         private function AddBall():void
         {
-            _ball = new Ball;
-            _ball.x = pathPts[0].x;
-            _ball.y = pathPts[0].y;
-            _path.addChild(_ball);
+            _ball = new RedBallView;
+            _ball.x = pathPts[0][0].x;
+            _ball.y = pathPts[0][0].y;
+            addChild(_ball);
             
-            addEventListener(Event.ENTER_FRAME, OnUpdate1);
+            //addEventListener(Event.ENTER_FRAME, OnUpdate1);
         }
         
         private function OnUpdate1(e:Event):void 
         {
             _projectilesController.Update();
+			OnUpdate();
         }
+		
+		private var pathPts:Vector.<Vector.<Point>>;
+		private var splinePts:Vector.<Vector.<Point>>;
+		
+		private var segmentsUniformMovement:Vector.<Segment>;
+		///private var delta:Number = 20;
+		private var SPEED:Number = 4;
+		private var missUpdate:int = 1;
         
         private function DrawSplinePath():void
         {
-                var i:Number = 1;
+                var i:int = 1;
+				var j:int = 1;
                 
-                pathPts = new Vector.<Point>;
-                splinePts = new Vector.<Point>;
+                pathPts = new Vector.<Vector.<Point>>;
+                splinePts = new Vector.<Vector.<Point>>;
                 
                 var pathPtMc:MovieClip;
                 
-                while (_path["pt_" + i])
-                {
-                        pathPtMc = _path["pt_" + i];
-                        pathPts.push(new Point(pathPtMc.x, pathPtMc.y));
+				while (_path["f_" + j])
+				{
+					pathPts.push(new Vector.<Point>);
+					i = 1;
+					
+					while (_path["f_" + j]["pt_" + i])
+					{
+                        pathPtMc = _path["f_" + j ]["pt_" + i];
+                        pathPts[j - 1].push(new Point(pathPtMc.x, pathPtMc.y));
                         i++;
-                }
+					}
+					
+					j++;
+				}
                 
                 var smoothX:Number;
                 var smoothY:Number;
                 
                 
-                var tempX:Vector.<Number> = new Vector.<Number>;
-                var tempY:Vector.<Number> = new Vector.<Number>;
+                var tempX:Vector.<Vector.<Number>> = new Vector.<Vector.<Number>>;
+                var tempY:Vector.<Vector.<Number>> = new Vector.<Vector.<Number>>;
                 
-                for (i = 0; i < pathPts.length; i++)
-                {
-                    tempX.push(pathPts[i].x);
-                    tempY.push(pathPts[i].y);
-                }
+				//_splines = new Vector.<CubicSpline>;
+				
+				for (j = 0; j < pathPts.length; j++)
+				{
+					tempX.push(new Vector.<Number>);
+					tempY.push(new Vector.<Number>);
+					//_splines.push(new CubicSpline());
+					splinePts.push(new Vector.<Point>);
+					
+					for (i = 0; i < pathPts[j].length; i++)
+					{
+						tempX[j].push(pathPts[j][i].x);
+						tempY[j].push(pathPts[j][i].y);
+					}
+					
+					//_splines[j].BuildSpline(tempY[j], tempX[j], tempX[j].length);
+				}
                 
-                _spline.BuildSpline(tempX, tempY, tempX.length);
+				
                
                 // left limit
-                DrawPoint(pathPts[0]);
+                //DrawPoint(0, pathPts[0][0]);
                 
-                var x_ToFindY:Number = pathPts[0].x + delta;
+                //var x_ToFindY:Number = pathPts[1][0].x + delta;
                             
-                while (x_ToFindY < pathPts[pathPts.length - 1].x)
-                {
-                        smoothY = _spline.F(x_ToFindY);
-                        DrawPoint(new Point(x_ToFindY, smoothY));
-                        x_ToFindY += delta;
-                }
+                //while (x_ToFindY < pathPts[1][pathPts[0].length - 1].x)
+                //{
+                  //      smoothY = _splines[1].F(x_ToFindY);
+                  //      DrawPoint(0, new Point(x_ToFindY, smoothY));
+                  //      x_ToFindY += delta;
+                //}
                 
                 // right limit
-                DrawPoint(pathPts[pathPts.length - 1]);
+                //DrawPoint(2, pathPts[_splines.length - 1][pathPts[_splines.length - 1].length - 1]);
                 
                 
-                segmentsUniformMovement = SubdividePath(splinePts);
+                segmentsUniformMovement = SubdividePath(pathPts);
         }
-        
-        private function DrawPoint(_pt:Point):void
-        {
-            _path.graphics.beginFill(0x00ff00, 1);
-            _path.graphics.drawCircle(_pt.x, _pt.y, 3);
-            _path.graphics.endFill();
-            
-            splinePts.push(_pt);
-        }
-        
-        private var currentSegmentIndex:int = 0;
-        private var missUpdateCount:int = 0;
-        
-        private function OnUpdate(e:Event):void
-        {
-            missUpdateCount ++;
-            
-            if (missUpdateCount < missUpdate)
-            {
-                    return;
-            }else 
-            {
-                missUpdateCount = 0;
-            }
-            
-            if (segmentsUniformMovement)
-            {
-                if (currentSegmentIndex == segmentsUniformMovement.length) 
-                {
-                    trace("num segments = " + currentSegmentIndex);
-                    currentSegmentIndex = 0;
-                    _ball.x = pathPts[0].x;
-                    _ball.y = pathPts[0].y;
-                }
-                
-                if (!segmentsUniformMovement[currentSegmentIndex].isResidual)
-                {
-                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
-                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
-                    currentSegmentIndex ++;
-                
-                }else {
-                    
-                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
-                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
-                    
-                    if ((currentSegmentIndex + 1) == segmentsUniformMovement.length)
-                    {
-                       currentSegmentIndex = 0;
-                       _ball.x = pathPts[0].x;
-                       _ball.y = pathPts[0].y;
-                       
-                    }else
-                    {
-                        currentSegmentIndex ++;
-                    }
-                    
-                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
-                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
-                    currentSegmentIndex ++;
-                }
-            }
-        }
-        
-        private function SubdividePath(path:Vector.<Point>):Vector.<Segment>
+		
+		private function SubdividePath(path:Vector.<Vector.<Point>>):Vector.<Segment>
         {
             var subdividedPath:Vector.<Segment> = new Vector.<Segment>;
             
             var i:int;
+			var j:int;
             var pt:Point;
             var priv_pt:Point;
             var resultVector:Point;
@@ -227,17 +187,18 @@ package
             var stepVectorLength:Number;
             var resultVectorsLen:Vector.<Number> = new Vector.<Number>
             
-            for (i = 1; i < path.length; i++)
-            {
-                priv_pt = path[i - 1];
-                pt = path[i];
-                resultVector =  pt.subtract(priv_pt);
-                //resultVector.x = Math.ceil(resultVector.x);
-                //resultVector.y = Math.ceil(resultVector.y);
-                resultVectors.push(resultVector);
-                resultNormalizedVectors.push(resultVector.clone()); // потом нормализуем, а сейчас просто копируем
-                resultVectorsLen.push(resultVector.length);
-            }
+			for (j = 0; j < path.length; j++)
+			{
+				for (i = 1; i < path[j].length; i++)
+				{
+					priv_pt = path[j][i - 1];
+					pt = path[j][i];
+					resultVector =  pt.subtract(priv_pt);
+					resultVectors.push(resultVector);
+					resultNormalizedVectors.push(resultVector.clone()); // потом нормализуем, а сейчас просто копируем
+					resultVectorsLen.push(resultVector.length);
+				}
+			}
             
             stepVectorLength = resultVectorsLen[0];
             
@@ -250,7 +211,7 @@ package
                     }
             }
             
-            for (i = 0; i < path.length - 1; i++)
+            for (i = 0; i < resultNormalizedVectors.length - 1; i++)
             {
                     resultNormalizedVectors[i].normalize(SPEED); 
             }
@@ -263,9 +224,7 @@ package
             
             var multipliedVector:Point;
             
-            var j:int;
-            
-            for (i = 0; i < path.length - 1; i++)
+            for (i = 0; i < resultNormalizedVectors.length - 1; i++)
             {
                     trace(i + "===================================================");
                     if (i == 0)
@@ -326,6 +285,70 @@ package
             
             return subdividedPath;
         }
+        
+        private function DrawPoint(splineIndex:int, _pt:Point):void
+        {
+            _path.graphics.beginFill(0x00ff00, 100);
+            _path.graphics.drawCircle(_pt.x, _pt.y, 3);
+            _path.graphics.endFill();
+            
+            splinePts[splineIndex].push(_pt);
+        }
+        
+        private var currentSegmentIndex:int = 0;
+        private var missUpdateCount:int = 0;
+        
+        private function OnUpdate():void
+        {
+            missUpdateCount ++;
+            
+            if (missUpdateCount < missUpdate)
+            {
+                    return;
+            }else 
+            {
+                missUpdateCount = 0;
+            }
+            
+            if (segmentsUniformMovement)
+            {
+                if (currentSegmentIndex == segmentsUniformMovement.length) 
+                {
+                    trace("num segments = " + currentSegmentIndex);
+                    currentSegmentIndex = 0;
+                    _ball.x = pathPts[0][0].x;
+                    _ball.y = pathPts[0][0].y;
+                }
+                
+                if (!segmentsUniformMovement[currentSegmentIndex].isResidual)
+                {
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    currentSegmentIndex ++;
+                
+                }else {
+                    
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    
+                    if ((currentSegmentIndex + 1) == segmentsUniformMovement.length)
+                    {
+                       currentSegmentIndex = 0;
+                       _ball.x = pathPts[0][0].x;
+                       _ball.y = pathPts[0][0].y;
+                       
+                    }else
+                    {
+                        currentSegmentIndex ++;
+                    }
+                    
+                    _ball.x += segmentsUniformMovement[currentSegmentIndex].speedVector.x;
+                    _ball.y += segmentsUniformMovement[currentSegmentIndex].speedVector.y;
+                    currentSegmentIndex ++;
+                }
+            }
+        }
+       
 	}
 	
 }
