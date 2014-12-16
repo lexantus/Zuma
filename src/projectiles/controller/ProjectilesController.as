@@ -14,7 +14,7 @@ package projectiles.controller
     public class ProjectilesController 
     {
         private const SPEED_X:Number = 0;
-        private const SPEED_Y:Number = -30;
+        private const SPEED_Y:Number = -100;
         
         private var RADIUS:Number = 19;
         
@@ -67,7 +67,11 @@ package projectiles.controller
                     {
                             trace("collision");
                                
-                            projectile.isColised = true;
+                            var A:Point = new Point(x1 - projectile.x, y1 - projectile.y);
+                            A.normalize(1);
+                            
+                            projectile.x -= A.x;
+                            projectile.y += A.y;
                            
                             _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);

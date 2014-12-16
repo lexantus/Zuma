@@ -11,7 +11,7 @@ package chain.view
     {
         public var ballViews:Vector.<MovieClip>;
         
-        private const BALL_DIAMETER:Number = 40;
+        private const BALL_DIAMETER:Number = 100;
         
         public function BallChainView() 
         {
