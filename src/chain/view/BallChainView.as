@@ -9,35 +9,35 @@ package chain.view
      */
     public class BallChainView extends Sprite 
     {
-        public var _ballViews:Vector.<MovieClip>;
+        public var ballViews:Vector.<MovieClip>;
         
-        private const BALL_RADIUS:Number = 40;
+        private const BALL_DIAMETER:Number = 40;
         
         public function BallChainView() 
         {
             super();
-			_ballViews = new Vector.<MovieClip>;
+			ballViews = new Vector.<MovieClip>;
         }
         
         public function addBall(viewClass:Class):void
         {
-            _ballViews.push(new viewClass());
-            addChild(_ballViews[_ballViews.length - 1]);
+            ballViews.push(new viewClass());
+            addChild(ballViews[ballViews.length - 1]);
         }
         
         public function SetBallsXYs():void
         {
             var i:int = 0;
                 
-            for (i = 0; i < _ballViews.length; i++)
+            for (i = 0; i < ballViews.length; i++)
             {
                 if (i != 0)
                 {
-                    _ballViews[i].x = _ballViews[i - 1].x + BALL_RADIUS;
+                    ballViews[i].x = ballViews[i - 1].x + BALL_DIAMETER;
                 
                 }
                 
-                 _ballViews[i].y = 100;
+                 ballViews[i].y = 100;
             }
         }
         

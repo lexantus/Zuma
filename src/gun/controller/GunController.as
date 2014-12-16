@@ -75,6 +75,7 @@ package gun.controller
         }
         
         private var bForbid:Boolean = false;
+        private var setProjectilesTime:Number = 0.25;
         
         private function OnClick(e:MouseEvent):void 
         {
@@ -91,7 +92,7 @@ package gun.controller
                                                 y: _nextProjectile.y - 14,
                                            scaleX:0.38, 
                                            scaleY:0.38, 
-                                             time:0.5,
+                                             time:setProjectilesTime,
                                        onComplete:function():void 
                                       {
                                             _nextProjectile.x = _nextProjectile.x + 3;

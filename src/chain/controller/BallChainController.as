@@ -96,6 +96,16 @@ package chain.controller
             return ballColors;
         }
         
+        public function get model():BallChainModel 
+        {
+            return _model;
+        }
+        
+        public function get view():BallChainView 
+        {
+            return _view;
+        }
+        
     }
 
 }
