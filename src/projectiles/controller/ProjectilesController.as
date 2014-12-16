@@ -16,7 +16,7 @@ package projectiles.controller
         private const SPEED_X:Number = 0;
         private const SPEED_Y:Number = -30;
         
-        private var RADIUS:Number = 20;
+        private var RADIUS:Number = 19;
         
         private var _projectiles:Vector.<MovieClip>;
         
@@ -42,21 +42,23 @@ package projectiles.controller
             _scene.addChild(_projectiles[_projectiles.length - 1]);
         }
         
-        private function checkCollisions(projectile:MovieClip):void
+        private function checkCollisions(projectileIndex:int):void
         {
             var i:int = 0;
             var ballsViews:Vector.<MovieClip> = _ballChainController.view.ballViews;
+            
+            var projectile:MovieClip = _projectiles[projectileIndex];
             
             var tempX:Number = projectile.x + SPEED_X;
             var tempY:Number = projectile.y + SPEED_Y;
             
             for (i = 0; i < ballsViews.length; i++)
             {
-                    var x1:Number = new Number(ballsViews[i].x + ballsViews[i].width / 2);
-                    var y1:Number = new Number(ballsViews[i].y + ballsViews[i].height / 2);
+                    var x1:Number = new Number(ballsViews[i].x);
+                    var y1:Number = new Number(ballsViews[i].y);
                     
-                    var x2:Number = new Number(tempX + projectile.width / 2);
-                    var y2:Number = new Number(tempY + projectile.height / 2);
+                    var x2:Number = new Number(tempX);
+                    var y2:Number = new Number(tempY);
                     
                     var distance:Number = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
                     var radiusSum:Number = 2 * RADIUS;
@@ -64,11 +66,11 @@ package projectiles.controller
                     if (distance < radiusSum)
                     {
                             trace("collision");
+                               
+                            projectile.isColised = true;
+                           
+                            _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);
-                    }else 
-                    {
-                            projectile.x = tempX;
-                            projectile.y = tempY;
                     }
             }
         }
@@ -91,8 +93,6 @@ package projectiles.controller
                 (tempY > boundary.maxY || tempY < boundary.minY))
             {
                     trace("ball is out");
-                    projectile.x = tempX;
-                    projectile.y = tempY;
                     projectile.parent.removeChild(projectile);
                     _projectiles.splice(projectileIndex, 1);
                     return false;
@@ -109,8 +109,14 @@ package projectiles.controller
             {
                 if (checkBoundary(i))
                 {
-                    checkCollisions(_projectiles[i]);
+                    checkCollisions(i);
                 }
+            }
+            
+             for (i = 0; i < _projectiles.length; i++)
+            {
+                _projectiles[i].x += SPEED_X;
+                _projectiles[i].y += SPEED_Y;
             }
         }
         

@@ -37,7 +37,7 @@ package chain.view
                 
                 }
                 
-                 ballViews[i].y = 100;
+                 ballViews[i].y = 120;
             }
         }
         

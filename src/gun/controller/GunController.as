@@ -66,12 +66,16 @@ package gun.controller
             _view.nextProjectileContainerMc.addChild(_nextProjectile);
             
             _currentProjectile.scaleX = 1/_view.currentProjectileContainerMc.scaleX;
-            _currentProjectile.scaleY = 1/_view.currentProjectileContainerMc.scaleY;
+            _currentProjectile.scaleY = 1 / _view.currentProjectileContainerMc.scaleY;
+            _currentProjectile.x = _currentProjectile.width / 2;
+            _currentProjectile.y = _currentProjectile.height / 2;
             
             _nextProjectile.width = _view.nextProjectileContainerMc.width;
             _nextProjectile.height = _view.nextProjectileContainerMc.height;
             _nextProjectile.scaleX = 0.6 / _view.nextProjectileContainerMc.scaleX;
             _nextProjectile.scaleY = 0.6 / _view.nextProjectileContainerMc.scaleY;
+            _nextProjectile.x = _nextProjectile.width / 2;
+            _nextProjectile.y = _nextProjectile.height / 2;
         }
         
         private var bForbid:Boolean = false;
@@ -88,15 +92,15 @@ package gun.controller
                 
             _projectilesController.fire(_currentProjectile, startProjectilePt);
             
-            Tweener.addTween(_nextProjectile, { x: _nextProjectile.x - 3, 
-                                                y: _nextProjectile.y - 14,
+            Tweener.addTween(_nextProjectile, { x: _nextProjectile.x, 
+                                                y: _nextProjectile.y - 10,
                                            scaleX:0.38, 
                                            scaleY:0.38, 
                                              time:setProjectilesTime,
                                        onComplete:function():void 
                                       {
-                                            _nextProjectile.x = _nextProjectile.x + 3;
-                                            _nextProjectile.y = _nextProjectile.y + 14;
+                                            _nextProjectile.x = _nextProjectile.x;
+                                            _nextProjectile.y = _nextProjectile.y + 10;
                                             SetProjectiles();
                                             bForbid = false;
                         
