@@ -1,4 +1,5 @@
-package levels.controller.interfaces levels.controller.interface levels.interface {
+package levels.controller 
+{
     
     /**
      * ...
@@ -6,7 +7,8 @@ package levels.controller.interfaces levels.controller.interface levels.interfac
      */
     public interface IZumaLevelController 
     {
-        
+        function Start():void;
+        function Update():void;
     }
     
 }

@@ -12,14 +12,10 @@ package levels.model
     
     public class ZumaLevelModel implements IZumaLevelModel
     {
-        public var speed:Number;
-        
         public var pathModel:IPathModel;
-        public var ballChainModel:IBallChainModel;
         
         public function ZumaLevelModel()
         {
-                ballChainModel = new BallChainModel();
         }
         
     }

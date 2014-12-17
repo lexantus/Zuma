@@ -14,7 +14,6 @@ package levels.model {
         {
             super();
             
-            speed = 2;
             pathModel = new PathModel3();
         }
         

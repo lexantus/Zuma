@@ -2,6 +2,7 @@ package chain.view
 {
 	import flash.display.Sprite;
     import flash.display.MovieClip;
+    import flash.geom.Point;
 	
 	/**
      * ...
@@ -11,34 +12,18 @@ package chain.view
     {
         public var ballViews:Vector.<MovieClip>;
         
-        private const BALL_DIAMETER:Number = 41;
-        
         public function BallChainView() 
         {
             super();
 			ballViews = new Vector.<MovieClip>;
         }
         
-        public function addBall(viewClass:Class):void
+        public function addBall(viewClass:Class, position:Point):void
         {
             ballViews.push(new viewClass());
+            ballViews[ballViews.length - 1].x = position.x;
+            ballViews[ballViews.length - 1].y = position.y;
             addChild(ballViews[ballViews.length - 1]);
-        }
-        
-        public function SetBallsXYs():void
-        {
-            var i:int = 0;
-                
-            for (i = 0; i < ballViews.length; i++)
-            {
-                if (i != 0)
-                {
-                    ballViews[i].x = ballViews[i - 1].x + BALL_DIAMETER;
-                
-                }
-                
-                 ballViews[i].y = 120;
-            }
         }
         
     }

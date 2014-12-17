@@ -5,9 +5,12 @@ package chain.controller
      * @author Rozhin Alexey
      */
     import ball.utils.BallUtils;
+    import ball.view.BallView;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import fla_assets.*;
+    import flash.geom.Point;
+    import path.model.interfaces.IPathModel;
     
     import bonus.interfaces.IBallBonus;
     import bonus.*;
@@ -26,9 +29,17 @@ package chain.controller
         private var _model:BallChainModel = new BallChainModel();
         private var _view:BallChainView = new BallChainView();
         
-        public function BallChainController(sceneView:Sprite) 
+        private var _startPt:Point;
+        private var _finishPt:Point;
+        private var _pathPts:Vector.<Point>;
+        
+        public function BallChainController(sceneView:Sprite, aPathPts:Vector.<Point>, aStartPoint:Point, aFinishPoint:Point) 
         {
             sceneView.addChild(_view);
+            
+            _pathPts = aPathPts;
+            _startPt = aStartPoint;
+            _finishPt = aFinishPoint;
         }
 		
 		public function GenerateStartChain(numBalls:int):void
@@ -37,16 +48,52 @@ package chain.controller
 			{
 				GenerateBall();
 			}
-            
-            _view.SetBallsXYs();
 		}
         
+        private var privIndexes:Vector.<int> = new Vector.<int>;
+        private var privIndex:int = 0;
+        private const RADIUS:Number = 20.5;
         
         public function GenerateBall():void
         {
             var ballDesc:BallDescription = _model.GenerateBallDescription();
             var _bonus:IBallBonus = ballDesc.bonus;
             var _color:IBallColor = ballDesc.color;
+            
+            var position:Point;
+            
+            var ballView:MovieClip;
+            
+            if (_view.ballViews.length == 0)
+            {
+                position = _startPt;
+                privIndexes.push(privIndex);
+                
+            }else {
+                
+                ballView = _view.ballViews[_view.ballViews.length - 1];
+               
+                position = new Point(ballView.x, ballView.y);
+                
+                for (var i:int = privIndex; i < _pathPts.length; i++)
+                {
+                    position.x += _pathPts[i].x;
+                    position.y += _pathPts[i].y;
+                    
+                    var vect:Point = new Point(position.x - ballView.x, position.y - ballView.y);
+                    
+                    if (vect.length < 2 * RADIUS)
+                    {
+                        privIndex ++;
+                        
+                    }else {
+                        
+                         privIndexes.push(privIndex);
+                         break;
+                    }
+                }
+            }
+            
             
             if (_bonus is FastShootingBonus)
             {
@@ -62,8 +109,18 @@ package chain.controller
                 
             }else if (_bonus == null)
             {
-                _view.addBall(BallUtils.GetBallViewClass(_color));     
+                _view.addBall(BallUtils.GetBallViewClass(_color), position);     
             }
+        }
+        
+        public function MoveChain():void
+        {
+             for (var i:int = 0; i < _view.ballViews.length; i++)
+             {
+                 _view.ballViews[i].x += _pathPts[privIndexes[i]].x;
+                 _view.ballViews[i].y += _pathPts[privIndexes[i]].y;
+                 privIndexes[i] ++;
+             }
         }
         
         public function GetRandomBallColorFromChain(numElementsNeedToGet:int = 2):Vector.<IBallColor>
