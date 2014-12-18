@@ -31,11 +31,12 @@ package levels.controller
         
         public function Start():void
         {
-            var startPoint:Point = new Point(-4, 121.2);
+            var startPoint:Point = new Point(5.25
+            , 118.85);
             var finishPoint:Point = new Point(118.85, 351.3);
             
             ballChainController  = new BallChainController(scene, model.pathModel.speedVectors, startPoint, finishPoint);
-            ballChainController.GenerateStartChain(5);
+            ballChainController.GenerateStartChain(10);
             
             projectilesController = new ProjectilesController(scene, ballChainController);
             

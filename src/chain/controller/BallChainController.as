@@ -64,6 +64,8 @@ package chain.controller
             
             var ballView:MovieClip;
             
+            var count:int = 0;
+            
             if (_view.ballViews.length == 0)
             {
                 position = _startPt;
@@ -75,6 +77,10 @@ package chain.controller
                
                 position = new Point(ballView.x, ballView.y);
                 
+                var privIndex1:int = privIndex;
+                var ballViewX:Number;
+                var ballViewY:Number;
+                
                 for (var i:int = privIndex; i < _speedVectors.length; i++)
                 {
                     position.x += _speedVectors[i].x;
@@ -85,12 +91,25 @@ package chain.controller
                     if (vect.length < 2 * RADIUS)
                     {
                         privIndex ++;
+                        count ++;
                         
                     }else {
                         
+                        trace("privIndex = " + privIndex);
                          privIndexes.push(privIndex);
                          break;
                     }
+                }
+                
+                position = _startPt;
+                
+                for (i = privIndex; i <= privIndex + count; i++)
+                {
+                        if (i < _speedVectors.length)
+                        {
+                            position.x += _speedVectors[i].x;
+                            position.y += _speedVectors[i].y;
+                        }
                 }
             }
             
@@ -98,14 +117,17 @@ package chain.controller
             if (_bonus is FastShootingBonus)
             {
                 trace("bonus is FastShootingBonus");
+                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
                
             }else if (_bonus is PlusOneBonus)
             {
                 trace("bonus is PlusOneBonus");
+                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
                 
             }else if (_bonus is StopMovementBonus)
             {
                 trace("bonus is StopMovementBonus");
+                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
                 
             }else if (_bonus == null)
             {
@@ -117,9 +139,14 @@ package chain.controller
         {
              for (var i:int = 0; i < _view.ballViews.length; i++)
              {
-                 _view.ballViews[i].x += _speedVectors[privIndexes[i]].x;
-                 _view.ballViews[i].y += _speedVectors[privIndexes[i]].y;
-                 privIndexes[i] ++;
+          
+                    if (_speedVectors.length > privIndexes[i])
+                    {
+                        //_view.ballViews[i].x += _speedVectors[privIndexes[i]].x;
+                        //_view.ballViews[i].y += _speedVectors[privIndexes[i]].y;
+                        //privIndexes[i] ++;
+                    }
+                 
              }
         }
         
