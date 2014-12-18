@@ -117,21 +117,21 @@ package chain.controller
             if (_bonus is FastShootingBonus)
             {
                 trace("bonus is FastShootingBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                
             }else if (_bonus is PlusOneBonus)
             {
                 trace("bonus is PlusOneBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                 
             }else if (_bonus is StopMovementBonus)
             {
                 trace("bonus is StopMovementBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                 
             }else if (_bonus == null)
             {
-                _view.addBall(BallUtils.GetBallViewClass(_color), position);     
+                _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);     
             }
         }
         

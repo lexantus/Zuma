@@ -50,8 +50,8 @@ package gun.controller
             if (!_nextProjectile)
             {
                 projectilesColors = _projectilesController.ballChainController.GetRandomBallColorFromChain(2);
-                _currentProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0]));
-                _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[1]));
+                _currentProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0], null));
+                _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[1], null));
                 
             }else
             {
@@ -59,7 +59,7 @@ package gun.controller
                 
                 projectilesColors= _projectilesController.ballChainController.GetRandomBallColorFromChain(1);
                 _currentProjectile = _nextProjectile;
-                _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0]));
+                _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0], null));
             }
             
             _view.currentProjectileContainerMc.addChild(_currentProjectile);

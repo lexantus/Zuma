@@ -26,7 +26,7 @@ package chain.model
                                                                   new StopMovementBonus(),
                                                                   new FastShootingBonus()];
         
-        public const BONUS_PROBABILITY:Number = 0.05;
+        public const BONUS_PROBABILITY:Number = 0.5;
         
         public var chain:Vector.<BallDescription>;
         
