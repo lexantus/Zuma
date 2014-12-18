@@ -15,7 +15,7 @@ package projectiles.controller
     public class ProjectilesController 
     {
         private const SPEED_X:Number = 0;
-        private const SPEED_Y:Number = -100;
+        private const SPEED_Y:Number = -45;
         
         private var RADIUS:Number = 19;
         
@@ -74,8 +74,9 @@ package projectiles.controller
                             projectile.x -= A.x;
                             projectile.y += A.y;
                            
-                            projectile.AnimateDie(null);
-                            _ballChainController.KillBall(i);
+                            //projectile.AnimateDie(null);
+                            //_ballChainController.KillBall(i);
+                            
                             _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);
                     }

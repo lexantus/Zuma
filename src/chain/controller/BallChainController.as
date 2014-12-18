@@ -152,9 +152,9 @@ package chain.controller
           
                     if (_speedVectors.length > privIndexes[i])
                     {
-                        //_view.ballViews[i].x += _speedVectors[privIndexes[i]].x;
-                        //_view.ballViews[i].y += _speedVectors[privIndexes[i]].y;
-                        //privIndexes[i] ++;
+                        _view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
+                        _view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
+                        privIndexes[i] ++;
                     }
                  
              }
