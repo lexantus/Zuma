@@ -55,8 +55,8 @@ package projectiles.controller
             
             for (i = 0; i < ballsViews.length; i++)
             {
-                    var x1:Number = new Number(ballsViews[i].x);
-                    var y1:Number = new Number(ballsViews[i].y);
+                    var x1:Number = new Number(ballsViews[i].view.x);
+                    var y1:Number = new Number(ballsViews[i].view.y);
                     
                     var x2:Number = new Number(tempX);
                     var y2:Number = new Number(tempY);
@@ -74,6 +74,8 @@ package projectiles.controller
                             projectile.x -= A.x;
                             projectile.y += A.y;
                            
+                            projectile.AnimateDie(null);
+                            _ballChainController.KillBall(i);
                             _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);
                     }

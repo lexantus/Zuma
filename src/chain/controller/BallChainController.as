@@ -135,6 +135,16 @@ package chain.controller
             }
         }
         
+        public function KillBall(ballIndex:int):void
+        {
+            _view.ballViews[ballIndex].AnimateDie(KillAnimationComplete);
+        }
+        
+        private function KillAnimationComplete():void
+        {
+                // TODO
+        }
+        
         public function MoveChain():void
         {
              for (var i:int = 0; i < _view.ballViews.length; i++)
