@@ -7,6 +7,7 @@ package gun.controller
      */
     import ball.model.colors.interfaces.IBallColor;
     import ball.utils.BallUtils;
+    import ball.view.BallView;
     import caurina.transitions.Tweener;
     import flash.display.MovieClip;
     import flash.display.Sprite;
@@ -24,8 +25,8 @@ package gun.controller
         private var _view:GunView;
         
         private var _projectilesController:ProjectilesController;
-        private var _currentProjectile:MovieClip;
-        private var _nextProjectile:MovieClip;
+        private var _currentProjectile:BallView;
+        private var _nextProjectile:BallView;
         
         public function GunController(sceneView:Sprite, projectilesController:ProjectilesController) 
         {

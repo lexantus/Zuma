@@ -4,6 +4,7 @@ package projectiles.controller
      * ...
      * @author Rozhin Alexey
      */
+    import ball.view.BallView;
     import chain.controller.BallChainController;
     import flash.display.MovieClip;
     import flash.display.Sprite;
@@ -18,7 +19,7 @@ package projectiles.controller
         
         private var RADIUS:Number = 19;
         
-        private var _projectiles:Vector.<MovieClip>;
+        private var _projectiles:Vector.<BallView>;
         
         private var _scene:Sprite;
         
@@ -26,12 +27,12 @@ package projectiles.controller
         
         public function ProjectilesController(aScene:Sprite, aBallChainConroller:BallChainController) 
         {
-            _projectiles = new Vector.<MovieClip>;
+            _projectiles = new Vector.<BallView>;
             _ballChainController = aBallChainConroller;
             _scene = aScene;
         }
         
-        public function fire(projectile:MovieClip, startPt:Point):void
+        public function fire(projectile:BallView, startPt:Point):void
         {
             trace("fire");
             _projectiles.push(projectile);
@@ -45,9 +46,9 @@ package projectiles.controller
         private function checkCollisions(projectileIndex:int):void
         {
             var i:int = 0;
-            var ballsViews:Vector.<MovieClip> = _ballChainController.view.ballViews;
+            var ballsViews:Vector.<BallView> = _ballChainController.view.ballViews;
             
-            var projectile:MovieClip = _projectiles[projectileIndex];
+            var projectile:BallView = _projectiles[projectileIndex];
             
             var tempX:Number = projectile.x + SPEED_X;
             var tempY:Number = projectile.y + SPEED_Y;
@@ -79,7 +80,7 @@ package projectiles.controller
             }
         }
         
-        private function React(indexOfCollisionBallInChain:int, projectile:MovieClip):void
+        private function React(indexOfCollisionBallInChain:int, projectile:BallView):void
         {
             
         }
@@ -88,7 +89,7 @@ package projectiles.controller
         
         private function checkBoundary(projectileIndex:int):Boolean
         {
-            var projectile:MovieClip = _projectiles[projectileIndex];
+            var projectile:BallView = _projectiles[projectileIndex];
             var tempX:Number = projectile.x + SPEED_X;
             var tempY:Number = projectile.y + SPEED_Y;
             

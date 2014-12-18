@@ -13,7 +13,7 @@ package ball.view.ordinary
         
         public function PurpleBallView() 
         {
-				view = fla_assets.PinkBallView();
+				view = new fla_assets.PinkBallView();
 				addChild(view);
         }
         

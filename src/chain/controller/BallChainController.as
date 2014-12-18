@@ -62,7 +62,7 @@ package chain.controller
             
             var position:Point;
             
-            var ballView:MovieClip;
+            var ballView:BallView;
             
             var count:int = 0;
             

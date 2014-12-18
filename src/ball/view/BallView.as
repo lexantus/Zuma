@@ -8,6 +8,7 @@ package ball.view {
     public class BallView extends Sprite
     {
 			public var view:MovieClip;
+            
     }
 
 }

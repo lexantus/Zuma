@@ -7,7 +7,11 @@ package ball.utils
 
     import bonus.interfaces.IBallBonus;
     import bonus.*;
-    import fla_assets.*;
+    import ball.view.bonus.plusonebonus.*;
+    import ball.view.bonus.fastshootbonus.*;
+    import ball.view.bonus.stopmovement.*;
+    import ball.view.ordinary.*;
+
     
     import ball.model.colors.interfaces.IBallColor;
     import ball.model.colors.*;
@@ -59,7 +63,7 @@ package ball.utils
                 
             }else if (ballColor is PurpleBallColor)
             {
-                return PinkBallView;
+                return PurpleBallView;
                 
             }else if (ballColor is RedBallColor)
             {
@@ -111,7 +115,7 @@ package ball.utils
         {
             if (ballColor is BlueBallColor)
             {
-                return BlueBallFastShootVew;
+                return BlueBallFastShootView;
                 
             }else if (ballColor is BrownBallColor)
             {
