@@ -31,13 +31,13 @@ package chain.controller
         
         private var _startPt:Point;
         private var _finishPt:Point;
-        private var _pathPts:Vector.<Point>;
+        private var _speedVectors:Vector.<Point>;
         
-        public function BallChainController(sceneView:Sprite, aPathPts:Vector.<Point>, aStartPoint:Point, aFinishPoint:Point) 
+        public function BallChainController(sceneView:Sprite, aSpeedVectors:Vector.<Point>, aStartPoint:Point, aFinishPoint:Point) 
         {
             sceneView.addChild(_view);
             
-            _pathPts = aPathPts;
+            _speedVectors = aSpeedVectors;
             _startPt = aStartPoint;
             _finishPt = aFinishPoint;
         }
@@ -75,10 +75,10 @@ package chain.controller
                
                 position = new Point(ballView.x, ballView.y);
                 
-                for (var i:int = privIndex; i < _pathPts.length; i++)
+                for (var i:int = privIndex; i < _speedVectors.length; i++)
                 {
-                    position.x += _pathPts[i].x;
-                    position.y += _pathPts[i].y;
+                    position.x += _speedVectors[i].x;
+                    position.y += _speedVectors[i].y;
                     
                     var vect:Point = new Point(position.x - ballView.x, position.y - ballView.y);
                     
@@ -117,8 +117,8 @@ package chain.controller
         {
              for (var i:int = 0; i < _view.ballViews.length; i++)
              {
-                 _view.ballViews[i].x += _pathPts[privIndexes[i]].x;
-                 _view.ballViews[i].y += _pathPts[privIndexes[i]].y;
+                 _view.ballViews[i].x += _speedVectors[privIndexes[i]].x;
+                 _view.ballViews[i].y += _speedVectors[privIndexes[i]].y;
                  privIndexes[i] ++;
              }
         }

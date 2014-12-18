@@ -75,33 +75,25 @@ package path.model
             
             var normalizedVectorLength:Number = resultNormalizedVectors[0].length;
             var numNormVectorsInSegment:int;
+            
+            var residualVector:Point;
+            var residualVectorLen:Number;
 
             var multipliedVector:Point;
             
             for (i = 0; i < resultNormalizedVectors.length; i++)
             {
-                    if (i == 0)
+                    
+                    numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength;
+                        
+                    multipliedVector = new Point(0, 0);
+                        
+                    for (j = 0; j < numNormVectorsInSegment; j++)
                     {
-                        numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength; 
-                        
-                        multipliedVector = new Point(0, 0);
-                        
-                        for (j = 0; j < numNormVectorsInSegment; j++)
-                        {
-                            multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
-                        }
+                        multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
                     }
-                    else
-                    {
-                        numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength;
-                        
-                        multipliedVector = new Point(0, 0);
-                        
-                        for (j = 0; j < numNormVectorsInSegment; j++)
-                        {
-                            multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
-                        }
-                    }
+
+                    residualVector = resultVectors[i].subtract(multipliedVector);
                     
                     for (j = 0; j < numNormVectorsInSegment; j++)
                     {
@@ -110,6 +102,9 @@ package path.model
                             segment = resultNormalizedVectors[i];
                             subdividedPath.push(segment);
                     }
+                    
+                    subdividedPath.push(residualVector);
+                    
             }
             
             return subdividedPath;

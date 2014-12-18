@@ -35,7 +35,7 @@ package levels.controller
             var finishPoint:Point = new Point(118.85, 351.3);
             
             ballChainController  = new BallChainController(scene, model.pathModel.speedVectors, startPoint, finishPoint);
-            ballChainController.GenerateStartChain(10);
+            ballChainController.GenerateStartChain(5);
             
             projectilesController = new ProjectilesController(scene, ballChainController);
             
