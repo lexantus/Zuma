@@ -26,7 +26,8 @@ package ui.view
         public var callbackBuyFunc:Function;
         public var callbackFireFunc:Function;
         
-        private var _projectilesNum:int = 0;
+        private var _projectilesNum:int = 5;
+        private var _isForbidAddNewSuperBall:Boolean;
         
         public function BuySuperballView(position:Point, aCallbackBuyFunc:Function, aCallbackFireFunc:Function) 
         {
@@ -37,17 +38,28 @@ package ui.view
             view.x = position.x;
             view.y = position.y;
             
-            SetState(BUY_STATE_FRAME);
+            if (_projectilesNum == 0)
+            {
+                SetState(BUY_STATE_FRAME);
+                
+            }else {
+                
+                SetState(SHOOT_STATE_FRAME);
+            }
         }
         
         private function OnFire(e:MouseEvent):void 
         {
-            _projectilesNum --;
-            callbackFireFunc();
-            
-            if (_projectilesNum == 0)
+            if (!isForbidAddNewSuperBall)
             {
-                SetState(BUY_STATE_FRAME);
+                _projectilesNum --;
+                view["txt_num"].text = _projectilesNum.toString();
+                callbackFireFunc();
+                
+                if (_projectilesNum == 0)
+                {
+                    SetState(BUY_STATE_FRAME);
+                }
             }
         }
         
@@ -82,6 +94,16 @@ package ui.view
         public function get currentState():int 
         {
             return _currentState;
+        }
+        
+        public function get isForbidAddNewSuperBall():Boolean 
+        {
+            return _isForbidAddNewSuperBall;
+        }
+        
+        public function set isForbidAddNewSuperBall(value:Boolean):void 
+        {
+            _isForbidAddNewSuperBall = value;
         }
     }
 

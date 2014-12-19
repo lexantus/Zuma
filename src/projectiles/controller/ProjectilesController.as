@@ -5,11 +5,13 @@ package projectiles.controller
      * @author Rozhin Alexey
      */
     import ball.view.BallView;
+    import ball.view.bonus.SuperBallView;
     import chain.controller.BallChainController;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.geom.Point;
     import projectiles.utils.Boundary;
+    import ui.controller.UIZumaController;
     
     
     public class ProjectilesController 
@@ -24,17 +26,25 @@ package projectiles.controller
         private var _scene:Sprite;
         
         private var _ballChainController:BallChainController;
+        private var _uiController:UIZumaController;
         
-        public function ProjectilesController(aScene:Sprite, aBallChainConroller:BallChainController) 
+        
+        
+        public function ProjectilesController(aScene:Sprite, aBallChainConroller:BallChainController, anUiController:UIZumaController) 
         {
             _projectiles = new Vector.<BallView>;
             _ballChainController = aBallChainConroller;
+            _uiController = anUiController;
             _scene = aScene;
         }
         
         public function fire(projectile:BallView, startPt:Point):void
         {
-            trace("fire");
+            if (projectile is SuperBallView)
+            {
+                _uiController.AllowAddNewSuperball();
+            }
+             
             _projectiles.push(projectile);
             _projectiles[_projectiles.length - 1].scaleX = 1;
             _projectiles[_projectiles.length - 1].scaleY = 1;
@@ -71,8 +81,8 @@ package projectiles.controller
                             var A:Point = new Point(x1 - projectile.x, y1 - projectile.y);
                             A.normalize(1);
                             
-                            projectile.x -= A.x;
-                            projectile.y += A.y;
+                            //projectile.x -= A.x;
+                            //projectile.y += A.y;
                            
                             //projectile.AnimateDie(null);
                             //_ballChainController.KillBall(i);

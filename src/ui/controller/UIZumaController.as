@@ -21,6 +21,16 @@ package ui.controller
             _scene.addChild(_buySuperballView.view);
         }
         
+        public function ForbidAddNewSuperball():void
+        {
+            _buySuperballView.isForbidAddNewSuperBall = true;
+        }
+        
+        public function AllowAddNewSuperball():void
+        {
+            _buySuperballView.isForbidAddNewSuperBall = false;
+        }
+        
         public function get buySuperballView():BuySuperballView 
         {
             return _buySuperballView;

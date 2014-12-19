@@ -6,6 +6,7 @@ package gun.controller
      * @author Rozhin Alexey
      */
     import ball.model.colors.interfaces.IBallColor;
+    import ball.model.SuperballModel;
     import ball.utils.BallUtils;
     import ball.view.BallView;
     import ball.view.bonus.SuperBallView;
@@ -29,13 +30,14 @@ package gun.controller
         private var _scene:Sprite;
         
         private var _projectilesController:ProjectilesController;
+        private var _uiController:UIZumaController;
         
         private var _currentProjectile:BallView;
         private var _nextProjectile:BallView;
         private var _superballProjectile:BallView;
         
         
-        public function GunController(sceneView:Sprite, projectilesController:ProjectilesController) 
+        public function GunController(sceneView:Sprite, projectilesController:ProjectilesController, anUiController:UIZumaController) 
         {
             _model = new GunModel;
             _view = new GunView;
@@ -43,6 +45,7 @@ package gun.controller
             _view.y = 443.5;
             
             _projectilesController = projectilesController;
+            _uiController = anUiController;
             
             _scene = sceneView;
             
@@ -103,15 +106,12 @@ package gun.controller
             _currentProjectile.scaleY = 1 /_view.currentProjectileContainerMc.scaleY;
             _currentProjectile.x = _currentProjectile.width / 2 - 1.5;
             _currentProjectile.y = _currentProjectile.height / 2 - 2;
+            
+            _uiController.ForbidAddNewSuperball();
         }
         
         private var bForbid:Boolean = false;
         private var setProjectilesTime:Number = 0.25;
-        
-        public function FireSuperball():void
-        {
-            SetSuperballProjectile();
-        }
         
         private function OnClick(e:MouseEvent):void 
         {

@@ -39,17 +39,16 @@ package levels.controller
             ballChainController  = new BallChainController(scene, model.pathModel.speedVectors, startPoint, finishPoint);
             ballChainController.GenerateStartChain(10);
             
-            projectilesController = new ProjectilesController(scene, ballChainController);
             
             uiController = new UIZumaController(scene, BuySuperball, FireSuperball);
-            gunController = new GunController(scene, projectilesController);
+            projectilesController = new ProjectilesController(scene, ballChainController, uiController);
+            gunController = new GunController(scene, projectilesController, uiController);
             
         }
         
         public function BuySuperball():void
         {
             trace("buy superball");
-            
         }
         
         public function FireSuperball():void
