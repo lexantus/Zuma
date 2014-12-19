@@ -7,6 +7,7 @@ package levels.controller
     import levels.view.ZumaLevelView;
     import path.model.PathModel1;
     import projectiles.controller.ProjectilesController;
+    import ui.controller.UIZumaController;
 	/**
      * ...
      * @author Rozhin Alexey
@@ -21,6 +22,8 @@ package levels.controller
         public var ballChainController:BallChainController;
         public var gunController:GunController;
         public var projectilesController:ProjectilesController;
+        
+        public var uiController:UIZumaController;
         
         
         public function ZumaLevelController(aSceneView:Sprite)

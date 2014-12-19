@@ -24,9 +24,6 @@ package
     import path.view.PathView;
     import path.view.*;
     
-    import assets.Ball;
-    import assets.*;
-	
 	public class Zuma extends Sprite 
 	{
         private var _path:MovieClip;

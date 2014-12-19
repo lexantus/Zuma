@@ -13,6 +13,7 @@ package levels.controller
     import levels.view.ZumaLevelView1;
     import path.model.PathModel1;
     import projectiles.controller.ProjectilesController;
+    import ui.controller.UIZumaController;
     
     
     public class ZumaLevelController1 extends ZumaLevelController implements IZumaLevelController
@@ -40,7 +41,21 @@ package levels.controller
             
             projectilesController = new ProjectilesController(scene, ballChainController);
             
+            uiController = new UIZumaController(scene, BuySuperball, FireSuperball);
             gunController = new GunController(scene, projectilesController);
+            
+        }
+        
+        public function BuySuperball():void
+        {
+            trace("buy superball");
+            
+        }
+        
+        public function FireSuperball():void
+        {
+            trace("fire superball");
+            gunController.SetSuperballProjectile();
         }
         
         public function Update():void
