@@ -7,6 +7,7 @@ package projectiles.controller
     import ball.view.BallView;
     import ball.view.bonus.SuperBallView;
     import chain.controller.BallChainController;
+    import fla_assets.PointUtil;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.geom.Point;
@@ -19,7 +20,7 @@ package projectiles.controller
         private const SPEED_X:Number = 0;
         private const SPEED_Y:Number = -45;
         
-        private var RADIUS:Number = 19;
+        private var RADIUS:Number = 20.5;
         
         private var _projectiles:Vector.<BallView>;
         
@@ -60,8 +61,8 @@ package projectiles.controller
             
             var projectile:BallView = _projectiles[projectileIndex];
             
-            var tempX:Number = projectile.x + SPEED_X;
-            var tempY:Number = projectile.y + SPEED_Y;
+            var tempX:Number = projectile.x;
+            var tempY:Number = projectile.y;
             
             for (i = 0; i < ballsViews.length; i++)
             {
@@ -78,19 +79,92 @@ package projectiles.controller
                     {
                             trace("collision");
                                
-                            var A:Point = new Point(x1 - projectile.x, y1 - projectile.y);
-                            A.normalize(1);
+                            //var A:Point = new Point(x1 - projectile.x, y1 - projectile.y);
+                            //A.normalize(1);
                             
                             //projectile.x -= A.x;
                             //projectile.y += A.y;
                            
                             //projectile.AnimateDie(null);
                             //_ballChainController.KillBall(i);
+                            var A:Point = new Point(x2 - x1, y2 - y1);
+                            var k:Number = Math.atan(A.y / A.x);
+                            trace("angle1 = " + Math.atan(k) * 180/Math.PI);
+      
+                            
+                            var intersectsPtsCircle1:Vector.<Point> = FindIntersectPtCircleWithLine1(x1, y1, RADIUS, k, 0);
+                            var intersectsPtsCircle2:Vector.<Point> = FindIntersectPtCircleWithLine1(x2, y2, RADIUS, k, 0);
+                            
+                            var p:int;
+                            
+                            for (p = 0; p < intersectsPtsCircle1.length; p++)
+                            {
+                                if (!isNaN(intersectsPtsCircle1[p].x))
+                                {
+                                    var ptMc1:MovieClip = new PointUtil;
+                                    ptMc1.x = intersectsPtsCircle1[p].x + 200;
+                                    ptMc1.y = intersectsPtsCircle1[p].y + 200;
+                                    trace(i +"___"+intersectsPtsCircle1[p]);
+                                    _scene.addChild(ptMc1);
+                                }
+                            }
+                            
+                            for (p = 0; p < intersectsPtsCircle2.length; p++)
+                            {
+                                var ptMc2:MovieClip = new PointUtil;
+                                ptMc2.x = intersectsPtsCircle2[p].x + 200;
+                                ptMc2.y = intersectsPtsCircle2[p].y + 200;
+                                _scene.addChild(ptMc2);
+                            }
                             
                             _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);
                     }
             }
+        }
+        
+        // x0, y0 - circle center, R-radius ( (x-x0)^2 + (y - y0)^2 = R^2 ), k-tangence b (y = kx + b)
+        private function FindIntersectPtCircleWithLine(x0:Number, y0:Number, R:Number, k:Number, b:Number):Vector.<Point>
+        {
+            var roots:Vector.<Point> = new Vector.<Point>;
+            
+            var interSectX1:Number =
+            
+                (1 / (2 * (k * k + 1))) * ((-2*b*k + 2*k*y0 + 2 * x0) + Math.sqrt(Math.pow(2*b*k - 2 * k * y0 - 2 * x0, 2) - 4 * (k * k + 1) * (b * b - 2 * b * y0 - R * R + x0 * x0 + y0 * y0)));
+            ;
+            
+            var interSectX2:Number =
+                (1 / (2 * (k * k + 1))) * ((-2*b*k + 2*k*y0 + 2 * x0) - Math.sqrt(Math.pow(2*b*k - 2 * k * y0 - 2 * x0, 2) - 4 * (k * k + 1) * (b * b - 2 * b * y0 - R * R + x0 * x0 + y0 * y0)));
+            ;
+            
+            var interSectY1:Number = k * interSectX1 + b;
+            var interSectY2:Number = k * interSectX2 + b;
+            
+            roots.push(new Point(interSectX1, interSectY1));
+            roots.push(new Point(interSectX2, interSectY2));
+            
+            return roots;
+        }
+        
+         private function FindIntersectPtCircleWithLine1(x0:Number, y0:Number, R:Number, k:Number, b:Number):Vector.<Point>
+        {
+            var roots:Vector.<Point> = new Vector.<Point>;
+            
+            var interSectX1:Number =
+                    ( -2 * k * b + Math.sqrt(4 * (R * R * (1 + k * k) - b * b))) / 2 * (1 + k * k);
+               ;
+            
+            var interSectX2:Number =
+                     ( -2 * k * b - Math.sqrt(4 * (R * R * (1 + k * k) - b * b))) / 2 * (1 + k * k);
+            ;
+            
+            var interSectY1:Number = k * interSectX1 + b;
+            var interSectY2:Number = k * interSectX2 + b;
+            
+            roots.push(new Point(interSectX1, interSectY1));
+            roots.push(new Point(interSectX2, interSectY2));
+            
+            return roots;
         }
         
         private function React(indexOfCollisionBallInChain:int, projectile:BallView):void
@@ -125,17 +199,18 @@ package projectiles.controller
             
             for (i = 0; i < _projectiles.length; i++)
             {
+                _projectiles[i].x += SPEED_X;
+                _projectiles[i].y += SPEED_Y;
+            }
+            
+            for (i = 0; i < _projectiles.length; i++)
+            {
                 if (checkBoundary(i))
                 {
                     checkCollisions(i);
                 }
             }
             
-             for (i = 0; i < _projectiles.length; i++)
-            {
-                _projectiles[i].x += SPEED_X;
-                _projectiles[i].y += SPEED_Y;
-            }
         }
         
         public function get ballChainController():BallChainController 

@@ -6,7 +6,6 @@ package gun.controller
      * @author Rozhin Alexey
      */
     import ball.model.colors.interfaces.IBallColor;
-    import ball.model.SuperballModel;
     import ball.utils.BallUtils;
     import ball.view.BallView;
     import ball.view.bonus.SuperBallView;
