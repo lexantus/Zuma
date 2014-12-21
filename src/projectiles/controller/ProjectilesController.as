@@ -124,13 +124,30 @@ package projectiles.controller
 							
 							if (ind11 == 1 && ind12 == 3)
 							{
-								index1 = 1;
-								index2 = 0;
+								if (y1 < y2)
+								{
+									index1 = 1;
+									index2 = 0;
+									
+								}else {
+									
+									index1 = 0;
+									index2 = 1;
+								}
 								
 							}else if (ind11 == 4 && ind12 == 2)
 							{
-								index1 = 0;
-								index2 = 1;
+								if (y1 < y2)
+								{
+									index1 = 0;
+									index2 = 1;
+								
+								}else {
+									
+									index1 = 1;
+									index2 = 0;
+								}
+								
 							}
 							
 							pt1.x = x1 + intersectsPtsCircle1[index1].x;
