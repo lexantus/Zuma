@@ -80,40 +80,76 @@ package projectiles.controller
                              // collision detected
                             var A:Point = new Point(x2 - x1, y2 - y1);
 							var B:Point = new Point(x1 - x2, y1 - y2);
-                            var k:Number = Math.atan(A.y / A.x);
+                            var k:Number = A.y / A.x;
                             
-                            var intersectsPtsCircle1:Vector.<Point> = FindIntersectPtCircleWithLine(x1, y1, RADIUS, k, 0);
-                            var intersectsPtsCircle2:Vector.<Point> = FindIntersectPtCircleWithLine(x2, y2, RADIUS, k, 0);
+                            var intersectsPtsCircle1:Vector.<Point> = FindIntersectPtCircleWithLine(RADIUS, k, 0);
+                            var intersectsPtsCircle2:Vector.<Point> = FindIntersectPtCircleWithLine(RADIUS, k, 0);
                             
                             var p:int;
+							
+							var quatersPts1:Vector.<int> = new Vector.<int>;
+							var quatersPts2:Vector.<int> = new Vector.<int>;
                             
                             for (p = 0; p < intersectsPtsCircle1.length; p++)
                             {
-									trace(intersectsPtsCircle1[p]);
-								
-                                    var ptMc1:MovieClip = new PointUtil;
-                                    ptMc1.x = x1 + intersectsPtsCircle1[p].x;
-                                    ptMc1.y = y1 + intersectsPtsCircle1[p].y;
-                                    _scene.addChild(ptMc1);
+									quatersPts1.push(FindQuater(intersectsPtsCircle1[p]));
                             }
-							
-							  var ptMcCent1:MovieClip = new PointUtil;
-                                   ptMcCent1.x = x1;
-                                   ptMcCent1.y = y1;
-                                   _scene.addChild(ptMcCent1);
                             
                             for (p = 0; p < intersectsPtsCircle2.length; p++)
                             {
-                                var ptMc2:MovieClip = new PointUtil;
-                                ptMc2.x = x2 + intersectsPtsCircle2[p].x;
-                                ptMc2.y = y2 + intersectsPtsCircle2[p].y;
-                                _scene.addChild(ptMc2);
+								quatersPts2.push(FindQuater(intersectsPtsCircle1[p]));
                             }
+								  
+							var pt1:Point = new Point();
+							var pt2:Point = new Point();
 							
-							 var ptMcCent2:MovieClip = new PointUtil;
-                                   ptMcCent2.x = x2;
-                                   ptMcCent2.y = y2;
-                                   _scene.addChild(ptMcCent2);
+							trace("intersectsPtsCircle1[0] = " + intersectsPtsCircle1[0]);
+							trace("intersectsPtsCircle1[1] = " + intersectsPtsCircle1[1]);
+							
+							trace("intersectsPtsCircle2[0] = " + intersectsPtsCircle2[0]);
+							trace("intersectsPtsCircle2[1] = " + intersectsPtsCircle2[1]);
+							
+							var ind11:int = FindQuater(intersectsPtsCircle1[0]);
+							var ind12:int = FindQuater(intersectsPtsCircle1[1]);
+							var ind21:int = FindQuater(intersectsPtsCircle2[0]);
+							var ind22:int = FindQuater(intersectsPtsCircle2[1]);
+							
+							trace("ind11 = " + ind11);
+							trace("ind12 = " + ind12);
+							trace("ind21 = " + ind21);
+							trace("ind22 = " + ind22);
+							
+							var index1:int;
+							var index2:int;
+							
+							if (ind11 == 1 && ind12 == 3)
+							{
+								index1 = 1;
+								index2 = 0;
+								
+							}else if (ind11 == 4 && ind12 == 2)
+							{
+								index1 = 0;
+								index2 = 1;
+							}
+							
+							pt1.x = x1 + intersectsPtsCircle1[index1].x;
+							pt1.y = y1 + intersectsPtsCircle1[index1].y;
+							
+							trace("x1 + intersectsPtsCircle1[0].x = " + pt1.x);
+							trace("y1 + intersectsPtsCircle1[0].y = " + pt1.y);
+							
+							pt2.x = x2 + intersectsPtsCircle2[index2].x;
+							pt2.y = y2 + intersectsPtsCircle2[index2].y;
+							
+							trace("x2 + intersectsPtsCircle2[1].x = " + pt2.x);
+							trace("y2 + intersectsPtsCircle2[1].y = " + pt2.y);
+							
+							var vectNotToInterset:Point = pt1.subtract(pt2);
+							trace(vectNotToInterset);
+							
+							projectile.x += vectNotToInterset.x;
+							projectile.y += vectNotToInterset.y;
                             
                             _projectiles.splice(projectileIndex, 1);
                             React(i, projectile);
@@ -121,7 +157,57 @@ package projectiles.controller
             }
         }
         
-         private function FindIntersectPtCircleWithLine(x0:Number, y0:Number, R:Number, k:Number, b:Number):Vector.<Point>
+		 private function FindIntersectPtCircleWithLine(R:Number, k:Number, b:Number):Vector.<Point>
+        {
+            var roots:Vector.<Point> = new Vector.<Point>;
+            
+            var interSectX1:Number =
+                    ( (-2 * k * b) + Math.sqrt(Math.pow((2*b*k),2) - 4*(k*k + 1)*(b*b - R*R))) / (2 * (1 + k * k));
+               ;
+            
+            var interSectX2:Number =
+                     ( (-2 * k * b) - Math.sqrt(Math.pow((2*b*k),2) - 4*(k*k + 1)*(b*b - R*R))) / (2 * (1 + k * k));
+            ;
+            
+            var interSectY1:Number = k * interSectX1 + b;
+            var interSectY2:Number = k * interSectX2 + b;
+            
+            roots.push(new Point(interSectX1, interSectY1));
+            roots.push(new Point(interSectX2, interSectY2));
+            
+            return roots;
+        }
+		
+		private const QUATER_1:int = 1;
+		private const QUATER_2:int = 2;
+		private const QUATER_3:int = 3;
+		private const QUATER_4:int = 4;
+		
+		private function FindQuater(pt:Point):int
+		{
+				if ((pt.x > 0) && (pt.y < 0))
+				{
+					return QUATER_1;
+				}
+				else if ((pt.x < 0) && (pt.y < 0))
+				{
+					return QUATER_2;
+				}
+				else if ((pt.x < 0) && (pt.y > 0))
+				{
+					return QUATER_3;
+			    }
+				else if ((pt.x > 0) && (pt.y > 0))
+				{
+					return QUATER_4;
+			    
+				}else{
+					
+					return -1;
+				}
+		}
+		
+        private function FindIntersectPtCircleWithLine1(x0:Number, y0:Number, R:Number, k:Number, b:Number):Vector.<Point>
         {
             var roots:Vector.<Point> = new Vector.<Point>;
             
