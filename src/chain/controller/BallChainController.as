@@ -52,7 +52,7 @@ package chain.controller
         
         private var privIndexes:Vector.<int> = new Vector.<int>;
         private var privIndex:int = 0;
-        private const RADIUS:Number = 20.5;
+        private const RADIUS:Number = 20.25;
         
         public function GenerateBall():void
         {
@@ -83,18 +83,23 @@ package chain.controller
                 
                 for (var i:int = privIndex; i < _speedVectors.length; i++)
                 {
-                    position.x += _speedVectors[i].x;
-                    position.y += _speedVectors[i].y;
-                    
+					position.x += _speedVectors[i].x;
+					position.y += _speedVectors[i].y;
+					
                     var vect:Point = new Point(position.x - ballView.x, position.y - ballView.y);
-                    
-                    if (vect.length < 2 * RADIUS)
+					
+                    if ((vect.length + 0.00001) < 2 * RADIUS)
                     {
                         privIndex ++;
                         count ++;
                         
                     }else {
                         
+						privIndex ++;
+                        count ++;
+						
+                        trace("privIndex = " + privIndex);
+
                          privIndexes.push(privIndex);
                          break;
                     }
@@ -102,7 +107,7 @@ package chain.controller
                 
                 position = _startPt;
                 
-                for (i = privIndex; i <= privIndex + count; i++)
+                for (i = privIndex; i < privIndex + count; i++)
                 {
                         if (i < _speedVectors.length)
                         {
@@ -115,14 +120,17 @@ package chain.controller
             
             if (_bonus is FastShootingBonus)
             {
+                trace("bonus is FastShootingBonus");
                  _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                
             }else if (_bonus is PlusOneBonus)
             {
+                trace("bonus is PlusOneBonus");
                  _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                 
             }else if (_bonus is StopMovementBonus)
             {
+                trace("bonus is StopMovementBonus");
                  _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
                 
             }else if (_bonus == null)
@@ -140,20 +148,42 @@ package chain.controller
         {
                 // TODO
         }
+		
+		private var g:int = 0;
         
         public function MoveChain():void
         {
+			return;
              for (var i:int = 0; i < _view.ballViews.length; i++)
              {
           
-                    if (_speedVectors.length > privIndexes[i])
-                    {
-                        //_view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
-                        //_view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
-                        //privIndexes[i] ++;
-                    }
+                    //if (_speedVectors.length > privIndexes[i])
+                    //{
+                       // _view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
+                       // _view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
+                       // privIndexes[i] ++;
+                    //}
+					
+					//_view
                  
              }
+			 
+			 if (_speedVectors[g].length < 2.9)
+			 {
+			 
+				_view.ballViews[0].view.x += _speedVectors[g].x;
+				_view.ballViews[0].view.y += _speedVectors[g].y;
+				g++;
+				_view.ballViews[0].view.x += _speedVectors[g].x;
+				_view.ballViews[0].view.y += _speedVectors[g].y;
+				g++;
+			
+			}else {
+				 
+			    _view.ballViews[0].view.x += _speedVectors[g].x;
+				_view.ballViews[0].view.y += _speedVectors[g].y;
+				g++;
+			}
         }
         
         public function GetRandomBallColorFromChain(numElementsNeedToGet:int = 2):Vector.<IBallColor>

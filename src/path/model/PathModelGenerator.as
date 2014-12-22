@@ -10,7 +10,7 @@ package path.model
     {
         private var pathPts:Vector.<Point>;
         
-		private var SPEED:Number = 3;
+		private var SPEED:Number = 4.05;
         private var segmentsUniformMovement:Vector.<Point>;
         
         private var _path:MovieClip;
@@ -56,7 +56,7 @@ package path.model
             var resultVectors:Vector.<Point> = new Vector.<Point>;
             var resultNormalizedVectors:Vector.<Point> = new Vector.<Point>;
             var stepVectorLength:Number;
-            var resultVectorsLen:Vector.<Number> = new Vector.<Number>
+            var resultVectorsLen:Vector.<Number> = new Vector.<Number>;
             
 			for (i = 1; i < path.length; i++)
 			{
@@ -83,27 +83,59 @@ package path.model
             
             for (i = 0; i < resultNormalizedVectors.length; i++)
             {
-                    
-                    numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength;
+                    if (i == 0)
+					{
+						numNormVectorsInSegment = resultVectorsLen[i] / normalizedVectorLength;
                         
-                    multipliedVector = new Point(0, 0);
+						multipliedVector = new Point(0, 0);
                         
-                    for (j = 0; j < numNormVectorsInSegment; j++)
-                    {
-                        multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
-                    }
+						for (j = 0; j < numNormVectorsInSegment; j++)
+						{
+							multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
+						}
 
-                    residualVector = resultVectors[i].subtract(multipliedVector);
+						residualVector = resultVectors[i].subtract(multipliedVector);
                     
-                    for (j = 0; j < numNormVectorsInSegment; j++)
-                    {
-                        var segment:Point = new Point;
+						for (j = 0; j < numNormVectorsInSegment; j++)
+						{
+							var segment:Point = new Point;
                            
                             segment = resultNormalizedVectors[i];
                             subdividedPath.push(segment);
-                    }
+						}
+						
+						subdividedPath.push(residualVector);
+					
+					}else {
+						
+						var firstSegment:Point = resultNormalizedVectors[i].clone();
+						firstSegment.normalize(SPEED - residualVector.length);
+						subdividedPath.push(firstSegment);
+						
+						numNormVectorsInSegment = (resultVectorsLen[i] - firstSegment.length) / normalizedVectorLength;
+						
+						multipliedVector = new Point(0, 0);
+                        
+						for (j = 0; j < numNormVectorsInSegment; j++)
+						{
+							multipliedVector = multipliedVector.add(resultNormalizedVectors[i]);
+						}
+
+						residualVector = resultVectors[i].subtract(multipliedVector).subtract(firstSegment);
+						
+						for (j = 0; j < numNormVectorsInSegment; j++)
+						{
+							var _segment:Point = new Point;
+                           
+                            _segment = resultNormalizedVectors[i];
+                            subdividedPath.push(_segment);
+						}
+						
+						subdividedPath.push(residualVector);
+						
+					}
+					
                     
-                    subdividedPath.push(residualVector);
                     
             }
             

@@ -48,7 +48,7 @@ package
             _bg.y = 247;
             addChild(_bg);
             
-            // GenerateLevelCoords();
+            GenerateLevelCoords();
             
             _levelController = new ZumaLevelController1(this);
             _levelController.Start();
