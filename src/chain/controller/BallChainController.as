@@ -50,7 +50,7 @@ package chain.controller
 			}
 		}
         
-        private var privIndexes:Vector.<int> = new Vector.<int>;
+        public var privIndexes:Vector.<int> = new Vector.<int>;
         private var privIndex:int = 0;
         private const RADIUS:Number = 20.25;
 		private var privPosition:Point;
@@ -144,6 +144,9 @@ package chain.controller
         
         public function MoveChain():void
         {
+			return;
+			if (isFreeze) return;
+			
              for (var i:int = 0; i < _view.ballViews.length; i++)
              {
                     if (_speedVectors.length != privIndexes[i])
@@ -167,24 +170,20 @@ package chain.controller
 						}
                     }
              }
-			 
-			 /*if (_speedVectors[g].length < 2.9)
-			 {
-			 
-				_view.ballViews[0].view.x += _speedVectors[g].x;
-				_view.ballViews[0].view.y += _speedVectors[g].y;
-				g++;
-				_view.ballViews[0].view.x += _speedVectors[g].x;
-				_view.ballViews[0].view.y += _speedVectors[g].y;
-				g++;
-			
-			}else {
-				 
-			    _view.ballViews[0].view.x += _speedVectors[g].x;
-				_view.ballViews[0].view.y += _speedVectors[g].y;
-				g++;
-			}*/
         }
+		
+		
+		private var isFreeze:Boolean = false;
+		
+		public function FreezeChain():void
+		{
+				isFreeze = true;
+		}
+		
+		public function UnfreezeChain():void
+		{
+				isFreeze = false;
+		}
         
         public function GetRandomBallColorFromChain(numElementsNeedToGet:int = 2):Vector.<IBallColor>
         {

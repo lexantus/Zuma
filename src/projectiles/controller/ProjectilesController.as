@@ -168,11 +168,20 @@ package projectiles.controller
 							projectile.x += vectNotToInterset.x;
 							projectile.y += vectNotToInterset.y;
                             
-                            _projectiles.splice(projectileIndex, 1);
-                            React(i, projectile);
+                            React(i, projectileIndex);
+							break;
                     }
             }
         }
+		
+		private function React(indexOfCollisionBallInChain:int, projectileIndex:int):void
+        {
+			ballChainController.FreezeChain();
+			_projectiles[projectileIndex].x = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.x;
+			_projectiles[projectileIndex].y = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.y;
+			_projectiles.splice(projectileIndex, 1);
+        }
+        
         
 		 private function FindIntersectPtCircleWithLine(R:Number, k:Number, b:Number):Vector.<Point>
         {
@@ -245,11 +254,7 @@ package projectiles.controller
             return roots;
         }
         
-        private function React(indexOfCollisionBallInChain:int, projectile:BallView):void
-        {
-            
-        }
-        
+      
         private var boundary:Boundary = new Boundary(-100, 874, -100, 600);
         
         private function checkBoundary(projectileIndex:int):Boolean
