@@ -129,6 +129,20 @@ package chain.controller
                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);     
             }
         }
+		
+		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):void
+		{
+				ballView.parent.removeChild(ballView);
+				_view.ballViews.splice(indexOfCollisionBallInChain, 0, ballView);
+				_view.ballViews[indexOfCollisionBallInChain].x = 0;
+				_view.ballViews[indexOfCollisionBallInChain].y = 0;
+				_view.ballViews[indexOfCollisionBallInChain].view.x = position.x;
+				_view.ballViews[indexOfCollisionBallInChain].view.y = position.y;
+				_view.addChild(ballView);
+				
+			   privIndexes.splice(indexOfCollisionBallInChain, 0, privIndex);
+			   
+		}
         
         public function KillBall(ballIndex:int):void
         {
@@ -144,7 +158,7 @@ package chain.controller
         
         public function MoveChain():void
         {
-			return;
+			//return;
 			if (isFreeze) return;
 			
              for (var i:int = 0; i < _view.ballViews.length; i++)
@@ -172,6 +186,48 @@ package chain.controller
              }
         }
 		
+		public function MoveChainByBallStep(fromIndex:int):void
+		{
+				var i:int;
+				var j:int;
+				
+				for (i = fromIndex; i < _view.ballViews.length; i++)
+				{
+						if (i != (_view.ballViews.length - 1))
+						{
+							_view.ballViews[i].view.x = _view.ballViews[i + 1].view.x;
+							_view.ballViews[i].view.y = _view.ballViews[i + 1].view.y;
+							privIndexes[i] = privIndexes[i + 1];
+						}else 
+						{	
+							    var position:Point = new Point(_view.ballViews[i].view.x, _view.ballViews[i].view.y);
+								var privPosition:Point = position.clone();
+								var privIndex:int = privIndexes[i];
+								
+								for (j = privIndex; j < _speedVectors.length; j++)
+								{
+									  position.x += _speedVectors[j].x;
+									  position.y += _speedVectors[j].y;
+									  
+									  var vect:Point = new Point(position.x - privPosition.x, position.y - privPosition.y);
+									  
+									  if ((vect.length + 0.5) < 2 * RADIUS)
+									  {
+											privIndexes[i] ++;
+											
+									  }else {
+											
+											privIndexes[i] ++;
+											break;
+										}
+								 }
+								 
+								 _view.ballViews[i].view.x = position.x;
+								 _view.ballViews[i].view.y = position.y;
+					    }
+						
+				}
+		}
 		
 		private var isFreeze:Boolean = false;
 		

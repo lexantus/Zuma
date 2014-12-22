@@ -134,9 +134,6 @@ package path.model
 						subdividedPath.push(residualVector);
 						
 					}
-					
-                    
-                    
             }
             
             return subdividedPath;

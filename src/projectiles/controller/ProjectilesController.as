@@ -179,7 +179,15 @@ package projectiles.controller
 			ballChainController.FreezeChain();
 			_projectiles[projectileIndex].x = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.x;
 			_projectiles[projectileIndex].y = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.y;
+			
+			var position:Point = new Point(_projectiles[projectileIndex].x, _projectiles[projectileIndex].y);
+			var privIndex:int = ballChainController.privIndexes[indexOfCollisionBallInChain];
+			
+			ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
+			ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex);
+			
 			_projectiles.splice(projectileIndex, 1);
+			ballChainController.UnfreezeChain();
         }
         
         
