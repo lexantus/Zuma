@@ -158,20 +158,23 @@ package projectiles.controller
 		
 		private function React(indexOfCollisionBallInChain:int, projectileIndex:int):void
         {
-			trace("React");
 			ballChainController.FreezeChain();
 			_projectiles[projectileIndex].x = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.x;
 			_projectiles[projectileIndex].y = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.y;
 			
 			var position:Point = new Point(_projectiles[projectileIndex].x, _projectiles[projectileIndex].y);
 			var privIndex:int = ballChainController.privIndexes[indexOfCollisionBallInChain];
+            
+            ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
 			
-			ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex);
-			ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
+			if (!ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex))
+            {
+                //ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
+            }
 			
 			_projectiles.splice(projectileIndex, 1);
 			
-			ballChainController.UnfreezeChain();
+			//ballChainController.UnfreezeChain();
         }
         
         

@@ -56,7 +56,13 @@ package chain.controller
 			
 			var startIndex:int = 0;
 			var count:int = 0;
-			var tempDesc:BallDescription = _view.ballViews[startIndex].desc;
+            
+			var tempDesc:BallDescription;
+            
+            if (_view.ballViews.length != 0)
+            {
+                tempDesc = _view.ballViews[startIndex].desc;
+            }
 			
 			for (i = 0; i < _view.ballViews.length; i++)
 			{
@@ -187,8 +193,10 @@ package chain.controller
             }
         }
 		
-		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):void
+		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):Boolean
 		{
+                var bDestroy:Boolean = false;
+            
 				ballView.parent.removeChild(ballView);
 				_view.ballViews.splice(indexOfCollisionBallInChain, 0, ballView);
 				_view.ballViews[indexOfCollisionBallInChain].x = 0;
@@ -201,10 +209,23 @@ package chain.controller
 			   
 			   var destroyIndexes:Vector.<int> = FindBallsIndexesForDestroy();
 			   trace(destroyIndexes);
+               
+               for (i = 0; i < _view.ballViews.length; i++)
+               {
+                    trace("before _view[" + i + "].view = " + _view.ballViews[i].view.x + " " + _view.ballViews[i].view.y);
+               }
 			   
 			   while (destroyIndexes)
 			   {
+                   if (!bDestroy)
+                   {
+                        bDestroy = true;
+                   }
+                   
 				   var i:int;
+                   
+                    
+                    MoveChainByBallStepBack(destroyIndexes[0], destroyIndexes.length);
 				   
 					for (i = 0; i < destroyIndexes.length; i++)
 					{
@@ -216,6 +237,13 @@ package chain.controller
 					
 					destroyIndexes = FindBallsIndexesForDestroy();
 			   }
+               
+               for (i = 0; i < _view.ballViews.length; i++)
+               {
+                    trace("after _view[" + i + "].view = " + _view.ballViews[i].view.x + " " + _view.ballViews[i].view.y);
+               }
+               
+               return bDestroy;
 			   
 		}
         
@@ -233,7 +261,6 @@ package chain.controller
         
         public function MoveChain():void
         {
-			return;
 			if (isFreeze) return;
 			
              for (var i:int = 0; i < _view.ballViews.length; i++)
@@ -302,6 +329,26 @@ package chain.controller
 					    }
 						
 				}
+		}
+        
+        public function MoveChainByBallStepBack(fromIndex:int, count:int):void
+		{
+				var i:int;
+                var tempCoords:Vector.<Point> = new Vector.<Point>;
+                
+                 for (i = 0; i < _view.ballViews.length; i++)
+                {
+                    tempCoords.push(new Point(_view.ballViews[i].view.x, _view.ballViews[i].view.y));
+                }
+               
+                for (i = fromIndex; i < _view.ballViews.length; i++)
+                {
+                        if (i + count < _view.ballViews.length)
+                        {
+                            _view.ballViews[i + count].view.x = tempCoords[i].x;
+                            _view.ballViews[i + count].view.y = tempCoords[i].y;
+                        }
+                }
 		}
 		
 		private var isFreeze:Boolean = false;
