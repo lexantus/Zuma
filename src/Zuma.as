@@ -6,6 +6,8 @@ package
      */
     
 	import fla_assets.Path1;
+    import fla_assets.Path2;
+    import fla_assets.Path3;
     import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
@@ -48,9 +50,9 @@ package
             _bg.y = 247;
             addChild(_bg);
             
-            //GenerateLevelCoords();
+            GenerateLevelCoords();
             
-            _levelController = new ZumaLevelController1(this);
+            _levelController = new ZumaLevelController3(this);
             _levelController.Start();
             
             this.addEventListener(Event.ENTER_FRAME, OnUpdate);
@@ -58,7 +60,7 @@ package
         
         private function GenerateLevelCoords():void
         {
-            _pathGenerator = new PathModelGenerator(new Path1);
+            _pathGenerator = new PathModelGenerator(new Path3);
         }
         
         private function OnUpdate(e:Event):void 

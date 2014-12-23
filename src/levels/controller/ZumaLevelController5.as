@@ -31,20 +31,22 @@ package levels.controller
         
         public function Start():void
         {
-            ballChainController  = new BallChainController(scene);
-            ballChainController.GenerateStartChain(12);
-            
-            projectilesController = new ProjectilesController(scene, ballChainController);
-            
-            gunController = new GunController(scene, projectilesController);
+           
         }
         
         public function Update():void
         {
-            if (projectilesController)
-            {
-                projectilesController.Update();
-            }
+          
+        }
+        
+        public function WinLevel():void
+        {
+            
+        }
+        
+        public function LoseLevel():void
+        {
+            
         }
         
     }

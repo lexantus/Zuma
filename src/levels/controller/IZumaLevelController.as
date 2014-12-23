@@ -9,6 +9,8 @@ package levels.controller
     {
         function Start():void;
         function Update():void;
+        function WinLevel():void;
+        function LoseLevel():void;
     }
     
 }

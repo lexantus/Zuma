@@ -33,13 +33,19 @@ package chain.controller
         private var _finishPt:Point;
         private var _speedVectors:Vector.<Point>;
         
-        public function BallChainController(sceneView:Sprite, aSpeedVectors:Vector.<Point>, aStartPoint:Point, aFinishPoint:Point) 
+        private var _WinFunc:Function;
+        private var _LoseFunc:Function;
+        
+        public function BallChainController(sceneView:Sprite, aSpeedVectors:Vector.<Point>, aStartPoint:Point, aFinishPoint:Point, aWinCallback:Function, aLoseCallback:Function) 
         {
             sceneView.addChild(_view);
             
             _speedVectors = aSpeedVectors;
             _startPt = aStartPoint;
             _finishPt = aFinishPoint;
+            
+            _WinFunc = aWinCallback;
+            _LoseFunc = aLoseCallback;
         }
 		
 		public function GenerateStartChain(numBalls:int):void
@@ -63,11 +69,6 @@ package chain.controller
             {
                 tempDesc = _view.ballViews[startIndex].desc;
             }
-			
-			for (i = 0; i < _view.ballViews.length; i++)
-			{
-				trace(_view.ballViews[i].desc.color);
-			}
 			
 			var indexesToDelete:Vector.<int> = new Vector.<int>;
 			
@@ -193,10 +194,8 @@ package chain.controller
             }
         }
 		
-		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):Boolean
+		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):void
 		{
-                var bDestroy:Boolean = false;
-            
 				ballView.parent.removeChild(ballView);
 				_view.ballViews.splice(indexOfCollisionBallInChain, 0, ballView);
 				_view.ballViews[indexOfCollisionBallInChain].x = 0;
@@ -208,19 +207,10 @@ package chain.controller
 			   privIndexes.splice(indexOfCollisionBallInChain, 0, privIndex);
 			   
 			   var destroyIndexes:Vector.<int> = FindBallsIndexesForDestroy();
-			   trace(destroyIndexes);
                
-               for (i = 0; i < _view.ballViews.length; i++)
-               {
-                    trace("before _view[" + i + "].view = " + _view.ballViews[i].view.x + " " + _view.ballViews[i].view.y);
-               }
-			   
 			   while (destroyIndexes)
 			   {
-                   if (!bDestroy)
-                   {
-                        bDestroy = true;
-                   }
+                  
                    
 				   var i:int;
                    
@@ -237,14 +227,6 @@ package chain.controller
 					
 					destroyIndexes = FindBallsIndexesForDestroy();
 			   }
-               
-               for (i = 0; i < _view.ballViews.length; i++)
-               {
-                    trace("after _view[" + i + "].view = " + _view.ballViews[i].view.x + " " + _view.ballViews[i].view.y);
-               }
-               
-               return bDestroy;
-			   
 		}
         
         public function KillBall(ballIndex:int):void
@@ -257,6 +239,20 @@ package chain.controller
                 // TODO
         }
 		
+        private function CheckStatus():void
+        {
+                if (_view.ballViews.length == 0)
+                {
+                    _WinFunc();
+                }
+                
+                if (privIndexes[privIndexes.length - 1] == (_speedVectors.length - 1))
+                {
+                    _LoseFunc();
+                    FreezeChain();
+                }
+        }
+        
 		private var g:int = 0;
         
         public function MoveChain():void
@@ -286,6 +282,8 @@ package chain.controller
 						}
                     }
              }
+             
+             CheckStatus();
         }
 		
 		public function MoveChainByBallStep(fromIndex:int):void
@@ -329,6 +327,8 @@ package chain.controller
 					    }
 						
 				}
+                
+                CheckStatus();
 		}
         
         public function MoveChainByBallStepBack(fromIndex:int, count:int):void

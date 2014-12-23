@@ -167,14 +167,11 @@ package projectiles.controller
             
             ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
 			
-			if (!ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex))
-            {
-                //ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
-            }
+			ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex);
 			
 			_projectiles.splice(projectileIndex, 1);
 			
-			//ballChainController.UnfreezeChain();
+			ballChainController.UnfreezeChain();
         }
         
         

@@ -60,6 +60,12 @@ package gun.controller
             SetProjectiles();
         }
         
+        public function StopGun():void
+        {
+            _scene.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+            _scene.removeEventListener(MouseEvent.CLICK, OnClick);
+        }
+        
         private function SetProjectiles():void
         {
             var projectilesColors:Vector.<IBallColor>;
