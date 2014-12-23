@@ -49,6 +49,72 @@ package chain.controller
 				GenerateBall();
 			}
 		}
+		
+		private function FindBallsIndexesForDestroy():Vector.<int>
+		{
+			var i:int;
+			
+			var startIndex:int = 0;
+			var count:int = 0;
+			var tempDesc:BallDescription = _view.ballViews[startIndex].desc;
+			
+			for (i = 0; i < _view.ballViews.length; i++)
+			{
+				trace(_view.ballViews[i].desc.color);
+			}
+			
+			var indexesToDelete:Vector.<int> = new Vector.<int>;
+			
+			for (i = 1; i < _view.ballViews.length; i++)
+			{
+					if (tempDesc.color == _view.ballViews[i].desc.color)
+					{
+							tempDesc = _view.ballViews[i].desc;
+							count ++;
+							
+							if (i == (_view.ballViews.length - 1))
+							{
+								if (count >= 2)
+								{
+									count ++;
+									
+									while (count > 0)
+									{
+											indexesToDelete.push((i + 1)- count);
+											count --;
+									}
+									
+									return indexesToDelete;
+								}
+							}
+							
+							
+					}else {
+						
+							tempDesc = _view.ballViews[i].desc;
+							
+							if (count >= 2)
+							{
+									count ++;
+									
+									while (count > 0)
+									{
+											indexesToDelete.push(i - count);
+											count --;
+									}
+									
+									return indexesToDelete;
+							}else{
+							
+								count = 0;
+							}
+						
+					}
+			}
+			
+			return null;
+		}
+		
         
         public var privIndexes:Vector.<int> = new Vector.<int>;
         private var privIndex:int = 0;
@@ -76,8 +142,6 @@ package chain.controller
             }else {
                 
                 ballView = _view.ballViews[_view.ballViews.length - 1];
-				trace("ball view pos = " + ballView.view.x + " " + ballView.view.y);
-				trace("priv position = " + privPosition.x +" "+ privPosition.y);
                
                 position = privPosition.clone();
                 
@@ -98,8 +162,6 @@ package chain.controller
 						
 						privPosition.x = position.x;
 						privPosition.y = position.y;
-						
-                        //trace("privIndex = " + privIndex);
 
                          privIndexes.push(privIndex);
                          break;
@@ -107,26 +169,21 @@ package chain.controller
                 }
             }
             
-			trace("position = "  + position);
-            
             if (_bonus is FastShootingBonus)
             {
-                trace("bonus is FastShootingBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position, ballDesc);   
                
             }else if (_bonus is PlusOneBonus)
             {
-                trace("bonus is PlusOneBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position, ballDesc);   
                 
             }else if (_bonus is StopMovementBonus)
             {
-                trace("bonus is StopMovementBonus");
-                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);   
+                 _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position, ballDesc);   
                 
             }else if (_bonus == null)
             {
-                _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position);     
+                _view.addBall(BallUtils.GetBallViewClass(_color, _bonus), position, ballDesc);     
             }
         }
 		
@@ -141,6 +198,24 @@ package chain.controller
 				_view.addChild(ballView);
 				
 			   privIndexes.splice(indexOfCollisionBallInChain, 0, privIndex);
+			   
+			   var destroyIndexes:Vector.<int> = FindBallsIndexesForDestroy();
+			   trace(destroyIndexes);
+			   
+			   while (destroyIndexes)
+			   {
+				   var i:int;
+				   
+					for (i = 0; i < destroyIndexes.length; i++)
+					{
+						KillBall(destroyIndexes[i]);
+					}
+					
+				
+					_view.ballViews.splice(destroyIndexes[0], destroyIndexes.length);
+					
+					destroyIndexes = FindBallsIndexesForDestroy();
+			   }
 			   
 		}
         
@@ -158,7 +233,7 @@ package chain.controller
         
         public function MoveChain():void
         {
-			//return;
+			return;
 			if (isFreeze) return;
 			
              for (var i:int = 0; i < _view.ballViews.length; i++)

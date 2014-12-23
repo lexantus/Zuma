@@ -4,6 +4,7 @@ package projectiles.controller
      * ...
      * @author Rozhin Alexey
      */
+	import ball.model.BallDescription;
     import ball.view.BallView;
     import ball.view.bonus.SuperBallView;
     import chain.controller.BallChainController;
@@ -30,7 +31,6 @@ package projectiles.controller
         private var _uiController:UIZumaController;
         
         
-        
         public function ProjectilesController(aScene:Sprite, aBallChainConroller:BallChainController, anUiController:UIZumaController) 
         {
             _projectiles = new Vector.<BallView>;
@@ -45,7 +45,7 @@ package projectiles.controller
             {
                 _uiController.AllowAddNewSuperball();
             }
-             
+			
             _projectiles.push(projectile);
             _projectiles[_projectiles.length - 1].scaleX = 1;
             _projectiles[_projectiles.length - 1].scaleY = 1;
@@ -92,7 +92,7 @@ package projectiles.controller
                             
                             for (p = 0; p < intersectsPtsCircle1.length; p++)
                             {
-									quatersPts1.push(FindQuater(intersectsPtsCircle1[p]));
+								quatersPts1.push(FindQuater(intersectsPtsCircle1[p]));
                             }
                             
                             for (p = 0; p < intersectsPtsCircle2.length; p++)
@@ -102,22 +102,11 @@ package projectiles.controller
 								  
 							var pt1:Point = new Point();
 							var pt2:Point = new Point();
-							
-							trace("intersectsPtsCircle1[0] = " + intersectsPtsCircle1[0]);
-							trace("intersectsPtsCircle1[1] = " + intersectsPtsCircle1[1]);
-							
-							trace("intersectsPtsCircle2[0] = " + intersectsPtsCircle2[0]);
-							trace("intersectsPtsCircle2[1] = " + intersectsPtsCircle2[1]);
-							
+
 							var ind11:int = FindQuater(intersectsPtsCircle1[0]);
 							var ind12:int = FindQuater(intersectsPtsCircle1[1]);
 							var ind21:int = FindQuater(intersectsPtsCircle2[0]);
 							var ind22:int = FindQuater(intersectsPtsCircle2[1]);
-							
-							trace("ind11 = " + ind11);
-							trace("ind12 = " + ind12);
-							trace("ind21 = " + ind21);
-							trace("ind22 = " + ind22);
 							
 							var index1:int;
 							var index2:int;
@@ -152,18 +141,11 @@ package projectiles.controller
 							
 							pt1.x = x1 + intersectsPtsCircle1[index1].x;
 							pt1.y = y1 + intersectsPtsCircle1[index1].y;
-							
-							trace("x1 + intersectsPtsCircle1[0].x = " + pt1.x);
-							trace("y1 + intersectsPtsCircle1[0].y = " + pt1.y);
-							
+
 							pt2.x = x2 + intersectsPtsCircle2[index2].x;
 							pt2.y = y2 + intersectsPtsCircle2[index2].y;
-							
-							trace("x2 + intersectsPtsCircle2[1].x = " + pt2.x);
-							trace("y2 + intersectsPtsCircle2[1].y = " + pt2.y);
-							
+
 							var vectNotToInterset:Point = pt1.subtract(pt2);
-							trace(vectNotToInterset);
 							
 							projectile.x += vectNotToInterset.x;
 							projectile.y += vectNotToInterset.y;
@@ -176,6 +158,7 @@ package projectiles.controller
 		
 		private function React(indexOfCollisionBallInChain:int, projectileIndex:int):void
         {
+			trace("React");
 			ballChainController.FreezeChain();
 			_projectiles[projectileIndex].x = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.x;
 			_projectiles[projectileIndex].y = ballChainController.view.ballViews[indexOfCollisionBallInChain].view.y;
@@ -183,10 +166,11 @@ package projectiles.controller
 			var position:Point = new Point(_projectiles[projectileIndex].x, _projectiles[projectileIndex].y);
 			var privIndex:int = ballChainController.privIndexes[indexOfCollisionBallInChain];
 			
-			ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
 			ballChainController.IncludeProjectileInChain(indexOfCollisionBallInChain, _projectiles[projectileIndex], position, privIndex);
+			ballChainController.MoveChainByBallStep(indexOfCollisionBallInChain);
 			
 			_projectiles.splice(projectileIndex, 1);
+			
 			ballChainController.UnfreezeChain();
         }
         

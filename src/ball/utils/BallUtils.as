@@ -5,6 +5,7 @@ package ball.utils
      * @author Rozhin Alexey
      */
 
+	import ball.model.BallDescription;
     import bonus.interfaces.IBallBonus;
     import bonus.*;
     import ball.view.bonus.plusonebonus.*;
@@ -19,6 +20,7 @@ package ball.utils
     
     public class BallUtils 
     {
+		
         public static function GetBallViewClass(ballColor:IBallColor, aBonus:IBallBonus):Class
         {
             if (aBonus)

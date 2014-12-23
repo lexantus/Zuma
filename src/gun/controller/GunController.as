@@ -5,6 +5,7 @@ package gun.controller
      * ...
      * @author Rozhin Alexey
      */
+	import ball.model.BallDescription;
     import ball.model.colors.interfaces.IBallColor;
     import ball.utils.BallUtils;
     import ball.view.BallView;
@@ -35,6 +36,8 @@ package gun.controller
         private var _nextProjectile:BallView;
         private var _superballProjectile:BallView;
         
+		private var _currentProjectileDesc:BallDescription;
+		private var _nextProjectileDesc:BallDescription;
         
         public function GunController(sceneView:Sprite, projectilesController:ProjectilesController, anUiController:UIZumaController) 
         {
@@ -64,8 +67,16 @@ package gun.controller
             if (!_nextProjectile)
             {
                 projectilesColors = _projectilesController.ballChainController.GetRandomBallColorFromChain(2);
+				
                 _currentProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0], null));
+				_currentProjectile.desc = new BallDescription;
+				_currentProjectile.desc.color = projectilesColors[0];
+				_currentProjectile.desc.bonus = null;
+				
                 _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[1], null));
+				_nextProjectile.desc = new BallDescription;
+				_nextProjectile.desc.color = projectilesColors[1];
+				_nextProjectile.desc.bonus = null;
                 
             }else
             {
@@ -73,7 +84,12 @@ package gun.controller
                 
                 projectilesColors= _projectilesController.ballChainController.GetRandomBallColorFromChain(1);
                 _currentProjectile = _nextProjectile;
-                _nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0], null));
+				
+				_nextProjectile = new (BallUtils.GetBallViewClass(projectilesColors[0], null));
+				
+				_nextProjectile.desc = new BallDescription;
+				_nextProjectile.desc.color = projectilesColors[0];
+				_nextProjectile.desc.bonus = null;
             }
             
             _view.currentProjectileContainerMc.addChild(_currentProjectile);
@@ -125,6 +141,8 @@ package gun.controller
             
              var startProjectilePt:Point = _currentProjectile.globalToLocal(new Point(_currentProjectile.x, _currentProjectile.y + 10));
             _currentProjectile.parent.removeChild(_currentProjectile);
+			
+			_currentProjectileDesc = new BallDescription();
                 
             _projectilesController.fire(_currentProjectile, startProjectilePt);
             
