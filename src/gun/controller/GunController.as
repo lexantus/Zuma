@@ -59,6 +59,11 @@ package gun.controller
             
             SetProjectiles();
         }
+		
+		public function RemoveGunMovieClip():void
+		{
+				 _scene.removeChild(_view);
+		}
         
         public function StopGun():void
         {

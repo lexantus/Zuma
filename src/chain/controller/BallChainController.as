@@ -244,14 +244,72 @@ package chain.controller
                 if (_view.ballViews.length == 0)
                 {
                     _WinFunc();
+					FreezeChain();
                 }
                 
-                if (privIndexes[privIndexes.length - 1] == (_speedVectors.length - 1))
-                {
-                    _LoseFunc();
-                    FreezeChain();
-                }
+				for (var i:int = 0; i < view.ballViews.length; i++)
+				{
+					if (privIndexes[i] == (_speedVectors.length - 1))
+					{
+						_LoseFunc();
+						FreezeChain();
+					}
+				}
         }
+		
+		public function MoveBallsWhenLose():Boolean
+		{
+			var speedFactor:int = 3;
+			var isDeleteAllBalls:Boolean = false;
+			
+			var i:int = 0;
+			
+			while (i < _view.ballViews.length)
+            {
+					for (var j:int = 0; j < speedFactor; j++)
+					{
+						if (privIndexes.length > 0)
+						{
+								if (_speedVectors.length != privIndexes[i])
+								{
+									if (_speedVectors[privIndexes[i]].length < 4)
+									{
+										_view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
+										_view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
+										privIndexes[i] ++;
+										 
+										if (_speedVectors.length == privIndexes[i]) return isDeleteAllBalls;
+										
+										_view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
+										_view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
+										privIndexes[i] ++;
+									}else 
+									{
+										_view.ballViews[i].view.x += _speedVectors[privIndexes[i]].x;
+										_view.ballViews[i].view.y += _speedVectors[privIndexes[i]].y;
+										privIndexes[i] ++;
+									}
+								}else {
+											_view.ballViews[i].parent.removeChild(_view.ballViews[i]);
+											_view.ballViews.splice(i, 1);
+											privIndexes.splice(i, 1);
+											i --;
+											
+											if (i == -1)
+											{
+													isDeleteAllBalls = true;
+													
+													return isDeleteAllBalls;
+											}
+								}
+						}
+					}
+					
+					i ++;
+				}
+				
+				return isDeleteAllBalls;
+		}
         
 		private var g:int = 0;
         

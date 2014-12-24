@@ -44,34 +44,68 @@ package levels.controller
             gunController = new GunController(scene, projectilesController, uiController);
         }
         
-       public function BuySuperball():void
-       {
-       }
+      public function Restart():void
+		{
+			model = new ZumaLevelModel2();
+            model.pathModel = new PathModel2();
+			
+			gunController.RemoveGunMovieClip();
+			
+			Start();
+		}
+        
+        public function BuySuperball():void
+        {
+        }
         
         public function FireSuperball():void
         {
             gunController.SetSuperballProjectile();
         }
         
+		private var missFrameForMoveChain:int = 0;
+		private const MISS_FRAME_MOVE_CHAIN:int = 4;
+		
         public function Update():void
         {
             if (projectilesController)
             {
                 projectilesController.Update();
-                ballChainController.MoveChain();
+				
+				if (!model.isLose)
+				{
+					
+					if (missFrameForMoveChain != MISS_FRAME_MOVE_CHAIN)
+					{
+						missFrameForMoveChain ++;
+						
+					}else{
+						
+						missFrameForMoveChain = 0;
+						ballChainController.MoveChain();
+					}
+				
+				}else {
+						
+					if (ballChainController.MoveBallsWhenLose())
+					{
+						model.isLoseAndFinishHideBallAnimations = true;
+					}
+				}
             }
         }
         
-        public function WinLevel():void
+       public function WinLevel():void
         {
-            
+            trace("WIN !!!");
+			model.isWin = true;
         }
         
         public function LoseLevel():void
         {
-            
+            trace("LOSE !!!");
+            gunController.StopGun();
+			model.isLose = true;
         }
-        
-    }
-
+	}
 }

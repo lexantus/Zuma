@@ -52,7 +52,7 @@ package
             
             GenerateLevelCoords();
             
-            _levelController = new ZumaLevelController3(this);
+            _levelController = new ZumaLevelController1(this);
             _levelController.Start();
             
             this.addEventListener(Event.ENTER_FRAME, OnUpdate);
@@ -65,7 +65,21 @@ package
         
         private function OnUpdate(e:Event):void 
         {
-            _levelController.Update();
+			if ((_levelController as ZumaLevelController).model.isLoseAndFinishHideBallAnimations)
+			{
+				_levelController.Restart();
+				
+			}else if (((_levelController as ZumaLevelController).model.isWin))
+			{
+				(_levelController as ZumaLevelController).RemoveView();
+				
+				_levelController = new ZumaLevelController2(this);
+				_levelController.Start();
+				
+			}else
+			{
+				_levelController.Update();
+			}
         }
         
 	}
