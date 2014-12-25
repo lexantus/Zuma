@@ -223,13 +223,14 @@ package chain.controller
 			   privIndexes.splice(indexOfCollisionBallInChain, 0, privIndex);
 			   
 			   var destroyIndexes:Vector.<int> = FindBallsIndexesForDestroy();
-               
+			   
 			   while (destroyIndexes)
 			   {
-                  
-                   
+				   trace(destroyIndexes);
+				   var rightIndex:int = destroyIndexes[0];
+				   var leftIndex:int = destroyIndexes[0] - 1;
+				   
 				   var i:int;
-                   
                     
                     MoveChainByBallStepBack(destroyIndexes[0], destroyIndexes.length);
 				   
@@ -237,11 +238,47 @@ package chain.controller
 					{
 						KillBall(destroyIndexes[i]);
 					}
-					
-				
+						
 					_view.ballViews.splice(destroyIndexes[0], destroyIndexes.length);
 					
 					destroyIndexes = FindBallsIndexesForDestroy();
+					
+					if (destroyIndexes == null)
+					{
+						
+						if ((rightIndex != _view.ballViews.length) && (_view.ballViews[rightIndex].desc.bonus != null))
+						{
+								 KillBall(rightIndex);
+									 
+								 if ((leftIndex != -1) && (_view.ballViews[leftIndex].desc.bonus != null))
+								 {
+										 MoveChainByBallStepBack(leftIndex, 2);
+										 KillBall(leftIndex);
+										 _view.ballViews.splice(leftIndex, 2);
+								 }else{
+									 
+									 MoveChainByBallStepBack(rightIndex, 1);
+									 KillBall(rightIndex);
+									 _view.ballViews.splice(rightIndex, 1);
+								 }
+						}else {
+								 
+							if ((leftIndex != -1) && (_view.ballViews[leftIndex].desc.bonus != null))
+							{
+										 MoveChainByBallStepBack(leftIndex, 1);
+										 KillBall(leftIndex);
+										 _view.ballViews.splice(leftIndex, 1);
+							 }
+							
+						}
+						
+						destroyIndexes = FindBallsIndexesForDestroy();
+					
+					}else {
+							
+						destroyIndexes = FindBallsIndexesForDestroy();
+					}
+					
 			   }
 		}
         

@@ -140,7 +140,7 @@ package gun.controller
         }
         
         private var bForbid:Boolean = false;
-        private var setProjectilesTime:Number = 0.25;
+        private var setProjectilesTime:Number = 0.8;
         
         private function OnClick(e:MouseEvent):void 
         {

@@ -18,8 +18,8 @@ package projectiles.controller
     
     public class ProjectilesController 
     {
-        private const SPEED_X:Number = 0;
-        private const SPEED_Y:Number = -45;
+        public const SPEED_X:Number = 0;
+        public const SPEED_Y:Number = -20;
         
         private var RADIUS:Number = 20.5;
         
