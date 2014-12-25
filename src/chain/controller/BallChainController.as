@@ -196,6 +196,22 @@ package chain.controller
 		
 		public function IncludeProjectileInChain(indexOfCollisionBallInChain:int, ballView:BallView, position:Point, privIndex:int):void
 		{
+				if (ballView.desc.color == null)
+				{
+						// it is superball
+						var j:int;
+						
+						ballView.parent.removeChild(ballView);
+						
+						for (j = 0; j < _view.ballViews.length; j++)
+						{
+								KillBall(j);
+						}
+						
+						_view.ballViews.splice(0, _view.ballViews.length);
+						return;
+				}
+			
 				ballView.parent.removeChild(ballView);
 				_view.ballViews.splice(indexOfCollisionBallInChain, 0, ballView);
 				_view.ballViews[indexOfCollisionBallInChain].x = 0;

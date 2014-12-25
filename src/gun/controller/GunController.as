@@ -125,6 +125,9 @@ package gun.controller
             _view.currentProjectileContainerMc.removeChild(_currentProjectile);
             
             _superballProjectile = new SuperBallView();
+			_superballProjectile.desc = new BallDescription;
+			_superballProjectile.desc.color = null;
+			
             _currentProjectile = _superballProjectile;
             _view.currentProjectileContainerMc.addChild(_currentProjectile);
             
